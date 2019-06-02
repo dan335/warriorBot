@@ -1,0 +1,28 @@
+{
+  "name": "warriors",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "cross-env DISCORD_TOKEN=NTg0MjU2ODQ0NzEzNjg5MDk4.XPIRoQ.OahhhnXT4pjx6J4P5wuLEWfCD3k NODE_ENV=development MONGO_URL=mongodb://localhost MONGO_DB=warriors nodemon --exec ./node_modules/.bin/babel-node index.js",
+    "prod": "cross-env DISCORD_TOKEN=NTg0MjU2ODQ0NzEzNjg5MDk4.XPIRoQ.OahhhnXT4pjx6J4P5wuLEWfCD3k NODE_ENV=production MONGO_URL=mongodb://localhost MONGO_DB=warriors ./node_modules/.bin/babel-node index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "cross-env": "^5.2.0",
+    "nodemon": "^1.19.1"
+  },
+  "dependencies": {
+    "@discordjs/uws": "^11.149.1",
+    "bad-words": "^3.0.2",
+    "bufferutil": "^4.0.1",
+    "date-fns": "^1.30.1",
+    "discord.js": "^11.5.1",
+    "elo-rating": "^1.0.1",
+    "erlpack": "github:hammerandchisel/erlpack",
+    "mongodb": "^3.2.6"
+  }
+}
