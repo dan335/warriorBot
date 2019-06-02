@@ -16,7 +16,6 @@
     "nodemon": "^1.19.1"
   },
   "dependencies": {
-    "@discordjs/uws": "^11.149.1",
     "bad-words": "^3.0.2",
     "bufferutil": "^4.0.1",
     "date-fns": "^1.30.1",
