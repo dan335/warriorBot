@@ -6,6 +6,7 @@ RUN apt-get update && apt-get install -y git python make gcc build-essential lib
 
 ADD build /opt/app/
 WORKDIR /opt/app
+
 RUN npm install
 
 CMD ["node", "index.js"]
