@@ -97,14 +97,14 @@ export default class Battle {
         warriorsCollection.deleteOne({_id:this.warrior1._id});
       }
     }
-    if (!this.warrior2.isWinner && this.warrior2.health <= 0) {
-      if (Math.random() <= 0.05) {
-        this.warrior2.died = true;
-        this.description += this.warrior2.name + ' died.\n';
-        this.shortDescription += this.warrior2.name + ' died.';
-        warriorsCollection.deleteOne({_id:this.warrior2._id});
-      }
-    }
+    // if (!this.warrior2.isWinner && this.warrior2.health <= 0) {
+    //   if (Math.random() <= 0.05) {
+    //     this.warrior2.died = true;
+    //     this.description += this.warrior2.name + ' died.\n';
+    //     this.shortDescription += this.warrior2.name + ' died.';
+    //     warriorsCollection.deleteOne({_id:this.warrior2._id});
+    //   }
+    // }
 
     this.shortDescription += '\n';
 

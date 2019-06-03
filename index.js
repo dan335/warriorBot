@@ -61,12 +61,12 @@ mongo.connect(error => {
 
   // nightly
   setTimeout(() => {
-    event.nightly(db, discord);
+    events.nightly(db, discord);
 
     // delay a second just to be sure
     setTimeout(() => {
       setInterval(() => {
-        event.nightly(db, discord);
+        events.nightly(db, discord);
       }, 1000 * 60 * 60 * 24);
     }, 1000);
 
@@ -74,11 +74,11 @@ mongo.connect(error => {
 
   // hourly
   setTimeout(() => {
-    event.hourly(db, discord);
+    events.hourly(db, discord);
 
     setTimeout(() => {
       setInterval(() => {
-        event.hourly(db, discord);
+        events.hourly(db, discord);
       }, 1000 * 60 * 60);
     }, 1000);
 

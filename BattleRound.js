@@ -33,7 +33,9 @@ export default class BattleRound {
     let dodged = ((Math.random() * 0.75 + 0.25) * defender.agility) > 0.7;
     let blocked = (Math.random() * defender.agility) > 0.25;
 
-    defender.health -= damage * landed;
+    if (!dodged && !blocked) {
+      defender.health -= damage * landed;
+    }
 
     let description = attacker.name+' swings at '+defender.name+' for '+Math.round(damage*landed)+' damage.';
     if (dodged) {

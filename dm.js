@@ -82,8 +82,10 @@ const dm = {
     const usersCollection = db.collection('users');
     const warriorsCollection = db.collection('warriors');
 
+
+
     // get user record
-    usersCollection.findOne({discordId:msg.author.id}, {}, (error, user) => {
+    usersCollection.findOne({discordId:msg.author.id}, {}, async (error, user) => {
       if (error) {
         console.log('Error in recruit:findOne');
         console.log(error);
@@ -92,57 +94,66 @@ const dm = {
 
           if (user.recuitsAvailable > 0) {
 
-            // make sure user doesn't have max warriors already
-            warriorsCollection.countDocuments({userId:user._id}, {}, (error, numWarriors) => {
-              if (error) {
-                console.log('Error in createWrecruitarrior:countDocuments');
-                console.log(error);
-              } else {
-                if (numWarriors >= _s.maxWarriors) {
-                  msg.author.send('Your ranks are full.  You cannot have more than '+_s.maxWarriors+' warriors.');
+            // check if name is duplicate
+            const exists = await warriorsCollection.countDocuments({guildDiscordId:user.guildDiscordId, name:name});
+
+            if (exists) {
+              msg.author.send('There is already a warrior by that name.  Choose another.');
+            } else {
+
+              // make sure user doesn't have max warriors already
+              warriorsCollection.countDocuments({userId:user._id}, {}, (error, numWarriors) => {
+                if (error) {
+                  console.log('Error in createWrecruitarrior:countDocuments');
+                  console.log(error);
                 } else {
+                  if (numWarriors >= _s.maxWarriors) {
+                    msg.author.send('Your ranks are full.  You cannot have more than '+_s.maxWarriors+' warriors.');
+                  } else {
 
-                  let strength = Math.random();
-                  let dexterity = Math.random();
-                  let agility = Math.random();
+                    let strength = Math.random();
+                    let dexterity = Math.random();
+                    let agility = Math.random();
 
-                  const warrior = {
-                    name: name,
-                    userId: user._id,
-                    username: user.username,
-                    userTag: user.tag,
-                    discordId: msg.author.id,
-                    guildDiscordId: user.guildDiscordId,
-                    createdAt: new Date(),
-                    updatedAt: new Date(),
-                    strength: strength,
-                    dexterity: dexterity,
-                    agility: agility,
-                    combinedStats: agility + dexterity + strength,
-                    points: 1000
-                  };
+                    const warrior = {
+                      name: name,
+                      userId: user._id,
+                      username: user.username,
+                      userTag: user.tag,
+                      discordId: msg.author.id,
+                      guildDiscordId: user.guildDiscordId,
+                      createdAt: new Date(),
+                      updatedAt: new Date(),
+                      strength: strength,
+                      dexterity: dexterity,
+                      agility: agility,
+                      combinedStats: agility + dexterity + strength,
+                      points: 1000,
+                      challenges: 4
+                    };
 
-                  // save warriors to db
-                  warriorsCollection.insertOne(warrior, {}, (error, result) => {
-                    if (error) {
-                      console.log('Error in recruit:insertOne');
-                      console.log(error);
-                      msg.author.send('Error creating warrior.  Try again soon.');
-                    } else {
-                      let m = '**'+name+'** has joined your ranks.\n';
-                      m += 'strength: ' + Math.round(warrior.strength*100) + '\n';
-                      m += 'dexterity: ' + Math.round(warrior.dexterity*100) + '\n';
-                      m += 'agility: ' + Math.round(warrior.agility*100) + '\n';
-                      m += '\n';
-                      m += 'There are **' + (user.recuitsAvailable-1) + '** warriors available for you to recruit.\n';
-                      msg.author.send(m);
-                    }
-                  });
+                    // save warriors to db
+                    warriorsCollection.insertOne(warrior, {}, (error, result) => {
+                      if (error) {
+                        console.log('Error in recruit:insertOne');
+                        console.log(error);
+                        msg.author.send('Error creating warrior.  Try again soon.');
+                      } else {
+                        let m = '**'+name+'** has joined your ranks.\n';
+                        m += 'strength: ' + Math.round(warrior.strength*100) + '\n';
+                        m += 'dexterity: ' + Math.round(warrior.dexterity*100) + '\n';
+                        m += 'agility: ' + Math.round(warrior.agility*100) + '\n';
+                        m += '\n';
+                        m += 'There are **' + (user.recuitsAvailable-1) + '** warriors available for you to recruit.\n';
+                        msg.author.send(m);
+                      }
+                    });
 
-                  usersCollection.updateOne({_id:user._id}, {$inc:{recuitsAvailable:-1}});
+                    usersCollection.updateOne({_id:user._id}, {$inc:{recuitsAvailable:-1}});
+                  }
                 }
-              }
-            })
+              })
+            }
 
           } else {
             msg.author.send('There are no warriors available for you to recruit.  Try again tomorrow.');
@@ -167,13 +178,9 @@ const dm = {
     }
 
     const warriorsCollection = db.collection('warriors');
-    const battlesCollection = db.collection('battles');
 
     warriorsCollection.deleteOne({name:name, discordId:msg.author.id}, {}, (error, result) => {
       if (result.deletedCount == 1) {
-        battlesCollection.deleteMany({warrior1Name:name, warrior1DiscordId:msg.author.id});
-        battlesCollection.deleteMany({warrior2Name:name, warrior2DiscordId:msg.author.id});
-
         msg.author.send(name + " is now retired.");
       } else {
         msg.author.send("I could not find a warrior by that name.");
@@ -296,6 +303,11 @@ const dm = {
 
     let name1 = commandArray[0].trim();
     let name2 = commandArray[1].trim();
+
+    if (name1 == name2) {
+      msg.author.send('Warriors cannot fight themselves.');
+      return;
+    }
 
     const warrior1 = await warriorsCollection.findOne({guildDiscordId: user.guildDiscordId, name:name1});
 
