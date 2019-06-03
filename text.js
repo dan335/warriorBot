@@ -8,10 +8,9 @@ const text = {
     let m = '';
     m += '**!help**\n';
     m += '**!joinGame** - Join the game.  WarriorBot will send you a direct message.\n';
-    m += "**!warriors** - View your guild's best warriors.\n";
-    m += "**!players** - View richest players.\n";
-    m += "**!guilds** - View other Discord guilds.\n";
-    m += '**!timeUntil** - Time until next event.\n';
+    m += "**!warriors <page number>** - View your guild's warriors.  Page number optional.\n";
+    m += "**!players <page number>** - View players.  Page number is optional.\n";
+    m += "**!guilds <page number>** - View Discord guilds.  Page number is optional.\n";
     m += '**!setResultChannel <channel name>** - Set the channel WarriorBot uses to report battle results.\n';
     msg.channel.send(m);
   },
@@ -22,11 +21,7 @@ const text = {
     m += 'Recuit warriors.  Challenge other players.  Attack other Discord guilds and steal their riches.\n';
     m += '\n';
     m += 'Type **!commands** to see available commands.\n';
-    if (msg.channel.type == 'text') {
-      msg.channel.send(m);
-    } else  if (msg.channel.type == 'dm') {
-      msg.author.send(m);
-    }
+    msg.channel.send(m);
   },
 
 
@@ -65,9 +60,18 @@ const text = {
 
 
 
-  joinGame: function(db, discord, msg) {
+  joinGame: async function(db, discord, msg) {
     const usersCollection = db.collection('users');
     const guildsCollection = db.collection('guilds');
+
+    // make sure user does not exist already.  maybe in another guild
+    const user = await usersCollection.findOne({discordId:msg.author.id});
+    if (user) {
+      if (user.guildDiscordId != msg.guild.id) {
+        msg.author.send("Looks like you're already playing in another guild. You must leave that guild's game to join this one. Type **!leaveGame** to leave.  This will delete all of your warriors and data.");
+        return;
+      }
+    }
 
     // save guild to db
     guildsCollection.updateOne({discordId:msg.guild.id}, {
@@ -80,71 +84,78 @@ const text = {
       $set: {
         updatedAt: new Date()
       }
-    }, {upsert:true}, (error, result) => {
+    }, {upsert:true}, async (error, result) => {
       if (error) {
         console.log('Error in join:updateOne');
         console.log(error);
       } else {
 
         // get guild id
-        guildsCollection.findOne({discordId:msg.guild.id}, {}, (error, guild) => {
+        const guild = await guildsCollection.findOne({discordId:msg.guild.id});
+        if (!guild) {
+          console.error('Could not find guild.  This should not happen.');
+          msg.reply('Could not get your guild from the db.  Weird.  Try again soon.');
+          return;
+        }
+
+        // upsert user
+        usersCollection.updateOne({discordId:msg.author.id}, {
+          $setOnInsert: {
+            discordId: msg.author.id,
+            guildId: guild._id,
+            guildName: guild.name,
+            guildDiscordId: msg.guild.id,
+            createdAt: new Date(),
+            tag: msg.author.tag,
+            username: msg.author.username,
+            avatar: msg.author.avatar,
+            avatarURL: msg.author.avatarURL,
+            gems: 0,
+            recuitsAvailable: 3
+          },
+          $set: {
+            updatedAt: new Date()
+          }
+        }, {upsert:true}, (error, result) => {
           if (error) {
-            console.log('Error in join:findOne');
+            console.log('Error in joinGame:updateOne');
             console.log(error);
+            msg.reply('Error creating user.  Try again soon.');
           } else {
-
-            if (guild) {
-              // upsert user
-              usersCollection.updateOne({discordId:msg.author.id, guildDiscordId:msg.guild.id}, {
-                $setOnInsert: {
-                  discordId: msg.author.id,
-                  guildId: guild._id,
-                  guildName: guild.name,
-                  guildDiscordId: msg.guild.id,
-                  createdAt: new Date(),
-                  tag: msg.author.tag,
-                  username: msg.author.username,
-                  avatar: msg.author.avatar,
-                  avatarURL: msg.author.avatarURL,
-                  gems: 0,
-                  recuitsAvailable: 3
-                },
-                $set: {
-                  updatedAt: new Date()
-                }
-              }, {upsert:true}, (error, result) => {
-                if (error) {
-                  console.log('Error in joinGame:updateOne');
-                  console.log(error);
-                  msg.reply('Error creating user.  Try again soon.');
-                } else {
-                  if (result.upsertedCount == 0) {
-                    msg.author.send('Welcome back.  Type **!commands** to see commands.');
-                  } else {
-                    msg.author.send('Welcome to the game. Type **!help** to begin.');
-                  }
-                }
-              });
-
+            if (result.upsertedCount == 0) {
+              msg.author.send('Welcome back.  Type **!commands** to see commands.');
             } else {
-              console.error('Could not find guild.  This should not happen.');
-              msg.reply('Could not get your guild from the db.  Weird.  Try again soon.');
+              msg.author.send('Welcome to the game. Type **!help** to begin.');
             }
           }
-        })
+        });
       }
     });
   },
 
 
 
-  warriors: function(db, discord, msg) {
+  warriors: async function(db, discord, msg) {
     const warriorsCollection = db.collection('warriors');
-    const cursor = warriorsCollection.find({guildDiscordId: msg.guild.id}, {sort:{points:-1, combinedStats:-1}, limit:15});
+
+    let page = Number(msg.content.replace('!warriors', '').trim());
+    if (isNaN(page)) {
+      page = 1;
+    }
+    page = Math.max(page, 1);
+    page -= 1;  // now starts at 0
+
+    const skip = _s.perPage * page;
+
+    const num = await warriorsCollection.countDocuments({guildDiscordId: msg.guild.id});
+    const numPages = Math.ceil(num / _s.perPage)
+
+    const cursor = warriorsCollection.find({guildDiscordId: msg.guild.id}, {sort:{points:-1, combinedStats:-1}, limit:_s.perPage, skip:skip});
     cursor.toArray((error, warriors) => {
       if (warriors.length) {
-        let m = "Your guild's warriors\n";
-        m += 'name/strength/dexterity/agility/points/owner\n'
+        let m = "Your guild's warriors.\n";
+        m += 'name   strength/dexterity/agility - points   owner\n';
+        m += 'Page '+(page+1)+' of '+numPages+'\n';
 
         for (let n = 0; n < warriors.length; n++) {
           m += '\n';
@@ -166,15 +177,30 @@ const text = {
 
 
 
-  players: function(db, discord, msg) {
+  players: async function(db, discord, msg) {
     const usersCollection = db.collection('users');
-    const cursor = usersCollection.find({guildDiscordId: msg.guild.id}, {sort: {gems:-1}, limit:20});
+
+    let page = Number(msg.content.replace('!players', '').trim());
+    if (isNaN(page)) {
+      page = 1;
+    }
+    page = Math.max(page, 1);
+    page -= 1;  // now starts at 0
+
+    const skip = _s.perPage * page;
+
+    const num = await usersCollection.countDocuments({guildDiscordId: msg.guild.id});
+    const numPages = Math.ceil(num / _s.perPage)
+
+    const cursor = usersCollection.find({guildDiscordId: msg.guild.id}, {sort: {gems:-1}, limit:_s.perPage, skip:skip});
     cursor.toArray((error, users) => {
       if (error) {
         console.log('Error in players:find');
         console.log(error);
       } else {
         let m = 'Top Players\n';
+        m += 'Page '+(page+1)+' of '+numPages+'\n';
+        m += '\n';
         users.forEach(user => {
           m += '**'+user.username+'** - **' + Math.round(user.gems) + '** gems\n';
         });

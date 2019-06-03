@@ -60,11 +60,6 @@ const commands = {
   },
 
 
-  timeUntil: function(db, discord, msg) {
-    shared.timeUntil(db, discord, msg);
-  },
-
-
   // TODO: remove this
   doEvent: function(db, discord, msg) {
     if (msg.channel.type == 'dm') {
@@ -96,6 +91,20 @@ const commands = {
 
   battles: function(db, discord, msg) {
     shared.battles(db, discord, msg);
+  },
+
+
+  serverTime: function(db, discord, msg) {
+    if (msg.channel.type == 'dm') {
+      dm.serverTime(db, discord, msg);
+    }
+  },
+
+
+  leaveGame: function(db, discord, msg) {
+    if (msg.channel.type == 'dm') {
+      dm.leaveGame(db, discord, msg);
+    }
   }
 }
 
