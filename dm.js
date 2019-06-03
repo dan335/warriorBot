@@ -242,7 +242,7 @@ const dm = {
           m += 'strength: **' + Math.round(warrior.strength*100) + '**, ';
           m += 'dexterity: **' + Math.round(warrior.dexterity*100) + '**, ';
           m += 'agility: **' + Math.round(warrior.agility*100) + '**, ';
-          m += 'points: **' + Math.round(warrior.rating) + '**, ';
+          m += 'points: **' + Math.round(warrior.points) + '**, ';
           m += 'challenges: **' + warrior.challenges + '**, \n';
         });
 
