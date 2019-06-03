@@ -23,7 +23,7 @@ const dm = {
 
   help: async function(db, discord, msg) {
     const usersCollection = db.collection('users');
-    const user = await usersCollection.findOne({discordId:msg.author.id});
+    const user = await usersCollection.findOne({discordId:msg.author.id, guildDiscordId:msg.guild.id});
     if (!user) {
       msg.author.send("Looks like you haven't joined the game yet.  Type **!joinGame** in a public channel to join the game.");
       return;
@@ -85,7 +85,7 @@ const dm = {
 
 
     // get user record
-    usersCollection.findOne({discordId:msg.author.id}, {}, async (error, user) => {
+    usersCollection.findOne({discordId:msg.author.id, guildDiscordId:msg.guild.id}, {}, async (error, user) => {
       if (error) {
         console.log('Error in recruit:findOne');
         console.log(error);
@@ -179,7 +179,7 @@ const dm = {
 
     const warriorsCollection = db.collection('warriors');
 
-    warriorsCollection.deleteOne({name:name, discordId:msg.author.id}, {}, (error, result) => {
+    warriorsCollection.deleteOne({name:name, discordId:msg.author.id, guildDiscordId:msg.guild.id}, {}, (error, result) => {
       if (result.deletedCount == 1) {
         msg.author.send(name + " is now retired.");
       } else {
@@ -198,7 +198,7 @@ const dm = {
     let isSelf;
     const msgArray = msg.content.split(' ');
     if (msgArray.length == 1) {
-      cursor = warriorsCollection.find({discordId:msg.author.id}, {sort:{rating:-1, combinedStats:-1}});
+      cursor = warriorsCollection.find({discordId:msg.author.id, guildDiscordId:msg.guild.id}, {sort:{rating:-1, combinedStats:-1}});
       isSelf = true;
     } else {
       let name = msg.content.replace('!warriors', '');
@@ -209,7 +209,7 @@ const dm = {
       }
 
       // get author's guild id
-      const user = await usersCollection.findOne({discordId: msg.author.id});
+      const user = await usersCollection.findOne({discordId: msg.author.id, guildDiscordId:msg.guild.id});
       if (!user) {
         msg.author.send('Could not find you in the db.  Type **!join** in a public channel to join the game.');
         return;
@@ -261,7 +261,7 @@ const dm = {
 
   players: async function(db, discord, msg) {
     const usersCollection = db.collection('users');
-    const user = await usersCollection.findOne({discordId: msg.author.id});
+    const user = await usersCollection.findOne({discordId: msg.author.id, guildDiscordId:msg.guild.id});
     if (user) {
       const cursor = usersCollection.find({guildDiscordId: user.guildDiscordId}, {sort: {gems:-1}, limit:20});
       cursor.toArray((error, users) => {
@@ -286,7 +286,7 @@ const dm = {
     const usersCollection = db.collection('users');
     const warriorsCollection = db.collection('warriors');
 
-    const user = await usersCollection.findOne({discordId: msg.author.id});
+    const user = await usersCollection.findOne({discordId: msg.author.id, guildDiscordId:msg.guild.id});
     if (!user) {
       msg.author.send("Looks like you haven't joined the game yet.  Type **!joinGame** in a public channel to join the game.");
       return;

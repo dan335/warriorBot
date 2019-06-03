@@ -95,7 +95,7 @@ const text = {
 
             if (guild) {
               // upsert user
-              usersCollection.updateOne({discordId:msg.author.id}, {
+              usersCollection.updateOne({discordId:msg.author.id, guildDiscordId:msg.guild.id}, {
                 $setOnInsert: {
                   discordId: msg.author.id,
                   guildId: guild._id,
