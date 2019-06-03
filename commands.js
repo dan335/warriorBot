@@ -60,6 +60,13 @@ const commands = {
   },
 
 
+  guildWarriors: function(db, discord, msg) {
+    if (msg.channel.type == 'dm') {
+      dm.guildWarriors(db, discord, msg);
+    }
+  },
+
+
   // TODO: remove this
   doEvent: function(db, discord, msg) {
     if (msg.channel.type == 'dm') {

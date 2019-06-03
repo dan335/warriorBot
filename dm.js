@@ -12,6 +12,7 @@ const dm = {
     m += '**!retire <name>** - Retire a warrior.\n';
     m += '**!warriors** - View your warriors.\n';
     m += "**!warriors <player name>** - View another player's warriors.\n";
+    m += "**!guildWarriors <page number>** - View your guild's warriors.\n";
     m += "**!battle <warrior name> -vs <warrior name>** - Put your warrior up against another warrior in the arena.\n";
     m += "**!guilds <page number>** - View Discord guilds.  Page number is optional.\n";
     m += "**!attack <warrior name> -vs <guild name>** - Send a warrior to attack another guild and bring back loot. - _not finished_\n";
@@ -192,6 +193,55 @@ const dm = {
         msg.author.send("I could not find a warrior by that name.");
       }
     })
+  },
+
+
+
+  guildWarriors: async function(db, discord, msg) {
+    const usersCollection = db.collection('users');
+    const warriorsCollection = db.collection('warriors');
+
+    const user = await usersCollection.findOne({discordId:msg.author.id});
+    if (!user) {
+      msg.author.send("I can't find you in my records.  Type **!joinGame** in a public channel to begin.");
+      return;
+    }
+
+    let page = Number(msg.content.replace('!warriors', '').trim());
+    if (isNaN(page)) {
+      page = 1;
+    }
+    page = Math.max(page, 1);
+    page -= 1;  // now starts at 0
+
+    const skip = _s.perPage * page;
+
+    const num = await warriorsCollection.countDocuments({guildDiscordId: user.guildDiscordId});
+    const numPages = Math.ceil(num / _s.perPage);
+
+    const cursor = warriorsCollection.find({guildDiscordId: user.guildDiscordId}, {sort:{points:-1, combinedStats:-1}, limit:_s.perPage, skip:skip});
+    cursor.toArray((error, warriors) => {
+      if (warriors.length) {
+        let m = "Your guild's warriors.\n";
+        m += 'name   strength/dexterity/agility - points   owner\n';
+        m += 'Page '+(page+1)+' of '+numPages+'\n';
+
+        for (let n = 0; n < warriors.length; n++) {
+          m += '\n';
+          m += (n+1)+'. ';
+          m += '**' + warriors[n].name + '**';
+          m += '    ' + Math.round(warriors[n].strength*100) + '/';
+          m += Math.round(warriors[n].dexterity*100) + '/';
+          m += Math.round(warriors[n].agility*100) + '';
+          m += ' - ' + Math.round(warriors[n].points);
+          m += '    ' + warriors[n].username;
+        }
+
+        msg.channel.send(m);
+      } else {
+        msg.channel.send('Your guild has no warriors.');
+      }
+    });
   },
 
 
