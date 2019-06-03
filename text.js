@@ -170,7 +170,7 @@ const text = {
 
         msg.channel.send(m);
       } else {
-        msg.channel.send('You have no warriors.');
+        msg.channel.send('No warriors.');
       }
     });
   },
@@ -198,13 +198,17 @@ const text = {
         console.log('Error in players:find');
         console.log(error);
       } else {
-        let m = 'Top Players\n';
-        m += 'Page '+(page+1)+' of '+numPages+'\n';
-        m += '\n';
-        users.forEach(user => {
-          m += '**'+user.username+'** - **' + Math.round(user.gems) + '** gems\n';
-        });
-        msg.channel.send(m);
+        if (users) {
+          let m = 'Players\n';
+          m += 'Page '+(page+1)+' of '+numPages+'\n';
+          m += '\n';
+          users.forEach(user => {
+            m += '**'+user.username+'** - **' + Math.round(user.gems) + '** gems\n';
+          });
+          msg.channel.send(m);
+        } else {
+          msg.channel.send('No players.');
+        }
       }
     })
   },

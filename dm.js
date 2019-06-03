@@ -12,12 +12,12 @@ const dm = {
     m += '**!retire <name>** - Retire a warrior.\n';
     m += '**!warriors** - View your warriors.\n';
     m += "**!warriors <player name>** - View another player's warriors.\n";
-    m += "**!guildWarriors <page number>** - View your guild's warriors.\n";
+    m += "**!guildWarriors <page number>** - View your guild's warriors.  Page number is optional.\n";
     m += "**!battle <warrior name> -vs <warrior name>** - Put your warrior up against another warrior in the arena.\n";
     m += "**!guilds <page number>** - View Discord guilds.  Page number is optional.\n";
     m += "**!attack <warrior name> -vs <guild name>** - Send a warrior to attack another guild and bring back loot. - _not finished_\n";
     m += '**!serverTime**\n';
-    m += "*!leaveGame** - Leave this guild's game.  This will delete your warriors and all your data.\n";
+    m += "**!leaveGame** - Leave this guild's game.  This will delete your warriors and all your data.\n";
     msg.author.send(m);
   },
 
@@ -239,7 +239,7 @@ const dm = {
 
         msg.channel.send(m);
       } else {
-        msg.channel.send('Your guild has no warriors.');
+        msg.channel.send('No warriors.');
       }
     });
   },
