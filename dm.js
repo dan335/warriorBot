@@ -76,8 +76,8 @@ const dm = {
       return;
     }
 
-    if (name.includes('-')) {
-      msg.author.send('- not allowed in warrior name.');
+    if (!name.match("^[A-z0-9 ]+$")) {
+      msg.author.send('Only letters numbers and spaces allowed in name.');
       return;
     }
 
@@ -122,6 +122,7 @@ const dm = {
                           name: name,
                           userId: user._id,
                           username: user.username,
+                          nickname: user.nickname,
                           userTag: user.tag,
                           discordId: msg.author.id,
                           guildDiscordId: user.guildDiscordId,
@@ -207,7 +208,7 @@ const dm = {
       return;
     }
 
-    let page = Number(msg.content.replace('!warriors', '').trim());
+    let page = Number(msg.content.replace('!guildWarriors', '').trim());
     if (isNaN(page)) {
       page = 1;
     }
@@ -228,13 +229,13 @@ const dm = {
 
         for (let n = 0; n < warriors.length; n++) {
           m += '\n';
-          m += (n+1)+'. ';
+          m += (n*(page+1)+1)+'. ';
           m += '**' + warriors[n].name + '**';
           m += '    ' + Math.round(warriors[n].strength*100) + '/';
           m += Math.round(warriors[n].dexterity*100) + '/';
           m += Math.round(warriors[n].agility*100) + '';
           m += ' - ' + Math.round(warriors[n].points);
-          m += '    ' + warriors[n].username;
+          m += '    ' + warriors[n].nickname;
         }
 
         msg.channel.send(m);
@@ -272,7 +273,7 @@ const dm = {
       }
 
       // get other player
-      otherUser = await usersCollection.findOne({guildDiscordId:user.guildDiscordId, username:name});
+      otherUser = await usersCollection.findOne({guildDiscordId:user.guildDiscordId, nickname:name});
       if (!otherUser) {
         msg.author.send('Player not found.');
         return;
@@ -289,7 +290,7 @@ const dm = {
         if (isSelf) {
           m += 'Your warriors\n';
         } else {
-          m += otherUser.username + "'s warriors.\n";
+          m += otherUser.nickname + "'s warriors.\n";
         }
 
         warriors.forEach(warrior => {
@@ -307,7 +308,7 @@ const dm = {
         if (isSelf) {
           msg.author.send('You have no warriors.  Use **!recruit <name>** to recruit one.');
         } else {
-          msg.author.send(otherUser.username + ' has no warriors.');
+          msg.author.send(otherUser.nickname + ' has no warriors.');
         }
       }
     });

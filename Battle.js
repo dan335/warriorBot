@@ -45,16 +45,16 @@ export default class Battle {
       this.warrior1.isWinner = true;
       this.warrior2.isWinner = false;
       this.description += this.warrior1.name + ' is the winner.\n';
-      this.shortDescription = this.warrior1.name+' defeated '+this.warrior2.name;
+      this.shortDescription = '**'+this.warrior1.name+'** defeated '+this.warrior2.name;
     } else if (this.warrior2.health > this.warrior1.health) {
       this.warrior2.isWinner = true;
       this.warrior1.isWinner = false;
       this.description += this.warrior2.name + ' is the winner.\n';
-      this.shortDescription = this.warrior2.name+' defeated '+this.warrior1.name;
+      this.shortDescription = this.warrior2.name+' defeated **'+this.warrior1.name+'**';
     } else {
       this.isTie = true;
       this.description += 'Battle ended in a tie.\n';
-      this.shortDescription = this.warrior2.name+' and '+this.warrior1.name+' tied.';
+      this.shortDescription = this.warrior2.name+' and **'+this.warrior1.name+'** tied.';
     }
 
     // gems and points
@@ -93,7 +93,7 @@ export default class Battle {
       if (Math.random() <= 0.05) {
         this.warrior1.died = true;
         this.description += this.warrior1.name + ' died.\n';
-        this.shortDescription += this.warrior1.name + ' died.';
+        this.shortDescription += ' '+this.warrior1.name + ' died.';
         warriorsCollection.deleteOne({_id:this.warrior1._id});
       }
     }
@@ -138,6 +138,7 @@ export default class Battle {
       warrior1UserTag: this.user1.tag,
       warrior1DiscordId: this.user1.discordId,
       warrior1Points: this.warrior1.points,
+      warrior1Nickname: this.user1.nickname,
 
       warrior2Id: this.warrior2._id,
       warrior2Name: this.warrior2.name,
@@ -146,6 +147,7 @@ export default class Battle {
       warrior2UserTag: this.user2.tag,
       warrior2DiscordId: this.user2.discordId,
       warrior2Points: this.warrior2.points,
+      warrior2Nickname: this.user2.nickname,
 
       guildDiscordId: this.user1.guildDiscordId,
       createdAt: new Date(),

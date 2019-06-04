@@ -23,8 +23,8 @@ export default class BattleRound {
 
   swing(attacker, defender) {
     let damage = (Math.random() * 0.75 + 0.25) * attacker.strength * 400;
-    if (Math.random() <= 0.1) damage *= 2;
-    if (Math.random() <= 0.05) damage *= 10;
+    if (Math.random() <= 0.1) damage *= 1.5;
+    if (Math.random() <= 0.05) damage *= 5;
 
     let landed = Math.random() * attacker.dexterity;
     if (Math.random() <= 0.1) landed = Math.min(1, landed * 2);
@@ -40,8 +40,7 @@ export default class BattleRound {
     let description = attacker.name+' swings at '+defender.name+' for '+Math.round(damage*landed)+' damage.';
     if (dodged) {
       description += ' '+defender.name+' dodged.';
-    }
-    if (blocked) {
+    } else if (blocked) {
       description += ' '+defender.name+' blocked.';
     }
     if (!dodged && !blocked) {

@@ -108,6 +108,7 @@ const text = {
             createdAt: new Date(),
             tag: msg.author.tag,
             username: msg.author.username,
+            nickname: msg.member.nickname,
             avatar: msg.author.avatar,
             avatarURL: msg.author.avatarURL,
             gems: 0,
@@ -159,13 +160,13 @@ const text = {
 
         for (let n = 0; n < warriors.length; n++) {
           m += '\n';
-          m += (n+1)+'. ';
+          m += (n*(page+1)+1)+'. ';
           m += '**' + warriors[n].name + '**';
           m += '    ' + Math.round(warriors[n].strength*100) + '/';
           m += Math.round(warriors[n].dexterity*100) + '/';
           m += Math.round(warriors[n].agility*100) + '';
           m += ' - ' + Math.round(warriors[n].points);
-          m += '    ' + warriors[n].username;
+          m += '    ' + warriors[n].nickname;
         }
 
         msg.channel.send(m);
@@ -203,7 +204,7 @@ const text = {
           m += 'Page '+(page+1)+' of '+numPages+'\n';
           m += '\n';
           users.forEach(user => {
-            m += '**'+user.username+'** - **' + Math.round(user.gems) + '** gems\n';
+            m += '**'+user.nickname+'** - **' + Math.round(user.gems) + '** gems\n';
           });
           msg.channel.send(m);
         } else {

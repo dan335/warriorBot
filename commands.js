@@ -67,14 +67,6 @@ const commands = {
   },
 
 
-  // TODO: remove this
-  doEvent: function(db, discord, msg) {
-    if (msg.channel.type == 'dm') {
-      events.nightly(db, discord);
-    }
-  },
-
-
   players: function(db, discord, msg) {
     if (msg.channel.type == 'dm') {
       dm.players(db, discord, msg);
