@@ -160,7 +160,7 @@ const text = {
 
         for (let n = 0; n < warriors.length; n++) {
           m += '\n';
-          m += (n*(page+1)+1)+'. ';
+          m += (page*_s.perPage+n+1)+'. ';
           m += '**' + warriors[n].name + '**';
           m += '    ' + Math.round(warriors[n].strength*100) + '/';
           m += Math.round(warriors[n].dexterity*100) + '/';
