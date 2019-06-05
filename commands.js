@@ -104,6 +104,13 @@ const commands = {
     if (msg.channel.type == 'dm') {
       dm.leaveGame(db, discord, msg);
     }
+  },
+
+
+  predict: function(db, discord, msg) {
+    if (msg.channel.type == 'dm') {
+      dm.predict(db, discord, msg);
+    }
   }
 }
 

@@ -2,6 +2,7 @@ const Filter = require('bad-words')
 const filter = new Filter();
 import _s from './settings.js';
 import Battle from './Battle.js';
+var EloRating = require('elo-rating');
 
 
 const dm = {
@@ -14,6 +15,7 @@ const dm = {
     m += "**!warriors <player name>** - View another player's warriors.\n";
     m += "**!guildWarriors <page number>** - View your guild's warriors.  Page number is optional.\n";
     m += "**!battle <warrior name> -vs <warrior name>** - Put your warrior up against another warrior in the arena.\n";
+    m += "**!predict <warrior name> -vs <warrior name>** - Predict who will win.\n";
     m += "**!guilds <page number>** - View Discord guilds.  Page number is optional.\n";
     m += "**!attack <warrior name> -vs <guild name>** - Send a warrior to attack another guild and bring back loot. - _not finished_\n";
     m += '**!serverTime**\n';
@@ -395,6 +397,54 @@ const dm = {
         });
       }
     });
+  },
+
+
+
+  predict: async function(db, discord, msg) {
+    const usersCollection = db.collection('users');
+    const warriorsCollection = db.collection('warriors');
+
+    const user = await usersCollection.findOne({discordId: msg.author.id});
+    if (!user) {
+      msg.author.send("Looks like you haven't joined the game yet.  Type **!joinGame** in a public channel to join the game.");
+      return;
+    }
+
+    let command = msg.content.replace('!predict', '');
+    command = command.trim();
+    const commandArray = command.split('-vs');
+
+    if (commandArray.length != 2) {
+      msg.author.send('Wrong number of arguments. **!predict <warrior name> -vs <warrior name>**.');
+      return;
+    }
+
+    let name1 = commandArray[0].trim();
+    let name2 = commandArray[1].trim();
+console.log('a')
+    if (name1 == name2) {
+      msg.author.send('Warriors cannot fight themselves.');
+      return;
+    }
+
+    const warrior1 = await warriorsCollection.findOne({guildDiscordId: user.guildDiscordId, name:name1});
+console.log('a')
+    if (!warrior1) {
+      msg.author.send('Could not find a warrior named **'+name1+'**.');
+      return;
+    }
+
+    const warrior2 = await warriorsCollection.findOne({guildDiscordId: user.guildDiscordId, name:name2});
+console.log('a')
+    if (!warrior2) {
+      msg.author.send('Could not find a warrior named **'+name2+'**.');
+      return;
+    }
+console.log('a')
+    const expected = EloRating.expected(warrior1.points, warrior2.points);
+console.log('a')
+    msg.author.send('Based on points there is '+Math.round(expected*100)+'% chance that '+warrior1.name+' will beat '+warrior2.name);
   }
 }
 
