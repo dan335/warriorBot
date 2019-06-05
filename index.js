@@ -98,7 +98,7 @@ mongo.connect(error => {
     next = dateFns.endOfHour(now);
   }
   setTimeout(() => {
-    event.halfHour(db, discord);
+    events.halfHour(db, discord);
 
     setInterval(() => {
       events.halfHour(db, discord);
