@@ -86,6 +86,21 @@ mongo.connect(error => {
 
 
   // half hour
+  const now = new Date();
+  const minutes = dateFns.getMinutes(now);
+  let next;
+  if (minutes < 30) {
+    next = dateFns.setMinutes(now, 30);
+  } else {
+    next = dateFns.endOfHour(now);
+  }
+  setTimeout(() => {
+    event.halfHour(db, discord);
+
+    setInterval(() => {
+      events.halfHour(db, discord);
+    }, 1000 * 60 * 30);
+  }, dateFns.differenceInMilliseconds(next, now));
 
 
   // // temp - fix names

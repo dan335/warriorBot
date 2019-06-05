@@ -30,8 +30,8 @@ export default class BattleRound {
     if (Math.random() <= 0.1) landed = Math.min(1, landed * 2);
     if (Math.random() <= 0.05) landed = Math.min(1, landed * 10);
 
-    let dodged = ((Math.random() * 0.75 + 0.25) * defender.agility) > 0.7;
-    let blocked = (Math.random() * defender.agility) > 0.25;
+    let dodged = ((Math.random() * 0.75 + 0.25) * defender.agility) > 0.72;
+    let blocked = (Math.random() * defender.agility) > 0.27;
 
     if (!dodged && !blocked) {
       defender.health -= damage * landed;
