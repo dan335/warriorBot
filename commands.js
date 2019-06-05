@@ -123,6 +123,12 @@ const commands = {
     if (msg.channel.type == 'dm') {
       dm.battleResults(db, discord, msg);
     }
+  },
+
+  attack: function(db, discord, msg) {
+    if (msg.channel.type == 'dm') {
+      dm.attack(db, discord, msg);
+    }
   }
 }
 

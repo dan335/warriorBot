@@ -52,6 +52,9 @@ mongo.connect(error => {
         commands[msgArray[0].substring(1)](db, discord, msg);
       } catch (error) {
         // command does not exist
+        if (msg.channel.type == 'dm') {
+          msg.author.send('I did not understand that command.  Try **!help** or **!commands**.');
+        }
       }
     }
   });
