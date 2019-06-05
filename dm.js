@@ -135,7 +135,8 @@ const dm = {
                           agility: agility,
                           combinedStats: agility + dexterity + strength,
                           points: 1000,
-                          challenges: 4
+                          challenges: 4,
+                          energy: 4
                         };
 
                         // save warriors to db
@@ -302,7 +303,7 @@ const dm = {
           m += 'dexterity: **' + Math.round(warrior.dexterity*100) + '**, ';
           m += 'agility: **' + Math.round(warrior.agility*100) + '**, ';
           m += 'points: **' + Math.round(warrior.points) + '**, ';
-          m += 'challenges: **' + warrior.challenges + '**, \n';
+          m += 'energy: **' + warrior.energy + '**, \n';
         });
 
         msg.author.send(m);
@@ -369,8 +370,8 @@ const dm = {
       return;
     }
 
-    if (warrior1.challenges <= 0) {
-      msg.author.send(name1+' is too tired to fight.  Your warrior has no challenges left.  Try again in an hour.');
+    if (warrior1.energy <= 0) {
+      msg.author.send(name1+' is too tired to fight.  Your warrior has no energy left.  Try again in an hour.');
       return;
     }
 
@@ -422,28 +423,28 @@ const dm = {
 
     let name1 = commandArray[0].trim();
     let name2 = commandArray[1].trim();
-console.log('a')
+
     if (name1 == name2) {
       msg.author.send('Warriors cannot fight themselves.');
       return;
     }
 
     const warrior1 = await warriorsCollection.findOne({guildDiscordId: user.guildDiscordId, name:name1});
-console.log('a')
+
     if (!warrior1) {
       msg.author.send('Could not find a warrior named **'+name1+'**.');
       return;
     }
 
     const warrior2 = await warriorsCollection.findOne({guildDiscordId: user.guildDiscordId, name:name2});
-console.log('a')
+
     if (!warrior2) {
       msg.author.send('Could not find a warrior named **'+name2+'**.');
       return;
     }
-console.log('a')
+
     const expected = EloRating.expected(warrior1.points, warrior2.points);
-console.log('a')
+
     msg.author.send('Based on points there is '+Math.round(expected*100)+'% chance that '+warrior1.name+' will beat '+warrior2.name);
   }
 }

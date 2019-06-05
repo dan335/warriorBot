@@ -84,7 +84,7 @@ export default class Battle {
       this.description += this.warrior2.name+' gained '+(newPoints.playerRating - this.warrior2.points)+' points.\n';
       this.description += this.warrior1.name+' lost '+(this.warrior1.points - newPoints.opponentRating)+' points.\n';
 
-      warriorsCollection.updateOne({_id:this.warrior1._id}, {$inc:{challenges:-1}, $set:{points:newPoints.opponentRating}});
+      warriorsCollection.updateOne({_id:this.warrior1._id}, {$inc:{energy:-1}, $set:{points:newPoints.opponentRating}});
       warriorsCollection.updateOne({_id:this.warrior2._id}, {$inc:{gems:Math.round(gems)}, $set:{points:newPoints.playerRating}});
     }
 
@@ -114,7 +114,7 @@ export default class Battle {
 
 
   printToDiscord() {
-    this.msg.author.send(this.description + this.warrior1.name+' has '+(this.warrior1.challenges-1)+' challenges left.');
+    this.msg.author.send(this.description + this.warrior1.name+' has '+(this.warrior1.energy-1)+' energy left.');
 
     const guildsCollection = this.db.collection('guilds');
     guildsCollection.findOne({discordId:this.user1.guildDiscordId}, {}, (error, guild) => {
