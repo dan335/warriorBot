@@ -1,7 +1,7 @@
 const _s = {
   actionCharacter: '!',
   maxWarriors: 5,
-  maxChallenges: 10,
+  maxEnergy: 10,
   perPage: 15,
   maxEnergy: 25
 }

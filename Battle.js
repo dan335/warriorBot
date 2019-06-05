@@ -69,7 +69,7 @@ export default class Battle {
       this.description += this.warrior1.name+' gained '+(newPoints.playerRating - this.warrior1.points)+' points.\n';
       this.description += this.warrior2.name+' lost '+(this.warrior2.points - newPoints.opponentRating)+' points.\n';
 
-      warriorsCollection.updateOne({_id:this.warrior1._id}, {$inc:{challenges:-1, gems:Math.round(gems)}, $set:{points:newPoints.playerRating}});
+      warriorsCollection.updateOne({_id:this.warrior1._id}, {$inc:{energy:-1, gems:Math.round(gems)}, $set:{points:newPoints.playerRating}});
       warriorsCollection.updateOne({_id:this.warrior2._id}, {$set:{points:newPoints.opponentRating}});
     }
 

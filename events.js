@@ -15,12 +15,12 @@ const events = {
 
   hourly: function(db, discord) {
     const warriorsCollection = db.collection('warriors');
-    warriorsCollection.updateMany({challenges: {$lt:_s.maxChallenges}}, {$inc:{challenges:1}});
+    warriorsCollection.updateMany({energy: {$lt:_s.maxEnergy}}, {$inc:{energy:1}});
   },
 
 
   halfHour: function(db, discord) {
-    
+
   }
 
 }

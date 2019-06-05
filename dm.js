@@ -135,7 +135,6 @@ const dm = {
                           agility: agility,
                           combinedStats: agility + dexterity + strength,
                           points: 1000,
-                          challenges: 4,
                           energy: 4
                         };
 
