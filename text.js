@@ -199,13 +199,14 @@ const text = {
         console.log('Error in players:find');
         console.log(error);
       } else {
-        if (users) {
+        if (users && users.length) {
           let m = 'Players\n';
           m += 'Page '+(page+1)+' of '+numPages+'\n';
           m += '\n';
-          users.forEach(user => {
-            m += '**'+user.nickname+'** - **' + Math.round(user.gems) + '** gems\n';
-          });
+          for (let n = 0; n < users.length; n++) {
+            m += (page*_s.perPage+n+1)+'. ';
+            m += '**'+users[n].nickname+'** - **' + Math.round(users[n].gems) + '** gems\n';
+          };
           msg.channel.send(m);
         } else {
           msg.channel.send('No players.');
