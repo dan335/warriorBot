@@ -88,24 +88,23 @@ mongo.connect(error => {
   // half hour
 
 
-  // temp - fix names
-  const c = db.collection('warriors');
-  const curs = c.find({});
-  curs.toArray((error, warriors) => {
-    warriors.forEach(warrior => {
-      c.updateOne({_id:warrior._id}, {$set:{
-        name:warrior.name.replace(/[^A-Za-z0-9 ]/g, ''),
-        nickname: warrior.username
-      }})
-    })
-  })
+  // // temp - fix names
+  // const c = db.collection('warriors');
+  // const curs = c.find({});
+  // curs.toArray((error, warriors) => {
+  //   warriors.forEach(warrior => {
+  //     c.updateOne({_id:warrior._id}, {$set:{
+  //       recruitsAvailable: warrior.recuitsAvailable
+  //     }})
+  //   })
+  // })
 
   // temp
   const u = db.collection('users');
   const cur = u.find({});
   cur.toArray((error, users) => {
     users.forEach(user => {
-      u.updateOne({_id:user._id}, {$set: {nickname:user.username}})
+      u.updateOne({_id:user._id}, {$set: {recruitsAvailable:user.recuitsAvailable}})
     })
   })
 })

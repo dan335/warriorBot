@@ -7,7 +7,7 @@ const events = {
   nightly: function(db, discord) {
     // give everyone 1 recruit
     const usersCollection = db.collection('users');
-    usersCollection.updateMany({}, {$inc:{recuitsAvailable:1}}, {}, (error, result) => {
+    usersCollection.updateMany({}, {$inc:{recruitsAvailable:1}}, {}, (error, result) => {
       console.log('nightly', result.matchedCount, result.modifiedCount)
     });
   },

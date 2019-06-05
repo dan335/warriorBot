@@ -3,7 +3,8 @@ const _s = {
   maxWarriors: 5,
   maxEnergy: 10,
   perPage: 15,
-  maxEnergy: 25
+  maxEnergy: 25,
+  buyRecruitCost: 600
 }
 
 

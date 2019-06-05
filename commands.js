@@ -111,6 +111,12 @@ const commands = {
     if (msg.channel.type == 'dm') {
       dm.predict(db, discord, msg);
     }
+  },
+
+  buyRecruit: function(db, discord, msg) {
+    if (msg.channel.type == 'dm') {
+      dm.buyRecruit(db, discord, msg);
+    }
   }
 }
 

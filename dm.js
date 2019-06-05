@@ -11,6 +11,7 @@ const dm = {
     m += '**!help**\n';
     m += '**!recruit <name>** - Recruit a new warrior.\n';
     m += '**!retire <name>** - Retire a warrior.\n';
+    m += '**!buyRecruit** - Buy a recruit token for '+_s.buyRecruitCost+' gems.\n';
     m += '**!warriors** - View your warriors.\n';
     m += "**!warriors <player name>** - View another player's warriors.\n";
     m += "**!guildWarriors <page number>** - View your guild's warriors.  Page number is optional.\n";
@@ -46,7 +47,7 @@ const dm = {
     m += '**Dexterity** - How likely your warrior is to land a blow.\n';
     m += '**Agility** - Chance that your warrior will dodge/block.\n';
     m += '\n';
-    m += 'There are **' + user.recuitsAvailable + '** warriors available for you to recruit.\n';
+    m += 'There are **' + user.recruitsAvailable + '** warriors available for you to recruit.\n';
     m += '\n';
     m += 'Type **!commands** to see available commands.\n';
     msg.author.send(m);
@@ -94,7 +95,7 @@ const dm = {
       } else {
         if (user) {
 
-          if (user.recuitsAvailable > 0) {
+          if (user.recruitsAvailable > 0) {
 
             // check if name is duplicate
             warriorsCollection.countDocuments({guildDiscordId:user.guildDiscordId, name:name}, {}, (error, exists) => {
@@ -150,12 +151,12 @@ const dm = {
                             m += 'dexterity: ' + Math.round(warrior.dexterity*100) + '\n';
                             m += 'agility: ' + Math.round(warrior.agility*100) + '\n';
                             m += '\n';
-                            m += 'There are **' + (user.recuitsAvailable-1) + '** warriors available for you to recruit.\n';
+                            m += 'There are **' + (user.recruitsAvailable-1) + '** warriors available for you to recruit.\n';
                             msg.author.send(m);
                           }
                         });
 
-                        usersCollection.updateOne({_id:user._id}, {$inc:{recuitsAvailable:-1}});
+                        usersCollection.updateOne({_id:user._id}, {$inc:{recruitsAvailable:-1}});
                       }
                     }
                   })
@@ -252,10 +253,19 @@ const dm = {
   warriors: async function(db, discord, msg) {
     const warriorsCollection = db.collection('warriors');
     const usersCollection = db.collection('users');
+
+    // get author's guild id
+    const user = await usersCollection.findOne({discordId: msg.author.id});
+    if (!user) {
+      msg.author.send('Could not find you in the db.  Type **!join** in a public channel to join the game.');
+      return;
+    }
+
     let cursor = null;
     let otherUser = null;
     let isSelf;
     const msgArray = msg.content.split(' ');
+
     if (msgArray.length == 1) {
       cursor = warriorsCollection.find({discordId:msg.author.id}, {sort:{rating:-1, combinedStats:-1}});
       isSelf = true;
@@ -267,12 +277,7 @@ const dm = {
         return;
       }
 
-      // get author's guild id
-      const user = await usersCollection.findOne({discordId: msg.author.id});
-      if (!user) {
-        msg.author.send('Could not find you in the db.  Type **!join** in a public channel to join the game.');
-        return;
-      }
+
 
       // get other player
       otherUser = await usersCollection.findOne({guildDiscordId:user.guildDiscordId, nickname:name});
@@ -291,6 +296,7 @@ const dm = {
         let m = '';
         if (isSelf) {
           m += 'Your warriors\n';
+          m += 'There are '+user.recruitsAvailable+' warriors available for recruiting.\n';
         } else {
           m += otherUser.nickname + "'s warriors.\n";
         }
@@ -445,6 +451,31 @@ const dm = {
     const expected = EloRating.expected(warrior1.points, warrior2.points);
 
     msg.author.send('Based on points there is '+Math.round(expected*100)+'% chance that '+warrior1.name+' will beat '+warrior2.name);
+  },
+
+
+
+  buyRecruit: async function(db, discord, msg) {
+    const usersCollection = db.collection('users');
+
+    const user = await usersCollection.findOne({discordId: msg.author.id});
+    if (!user) {
+      msg.author.send("Looks like you haven't joined the game yet.  Type **!joinGame** in a public channel to join the game.");
+      return;
+    }
+
+    if (user.gems < _s.buyRecruitCost) {
+      msg.author.send('You do not have enough gems.  This costs '+_s.buyRecruitCost+' gems.');
+      return;
+    }
+
+    usersCollection.updateOne({_id:user._id}, {$inc:{gems:_s.buyRecruitCost*-1, recruitsAvailable:1}}, {}, (error, result) => {
+      if (error) {
+        console.log('Error buyRecruit:updatOne');
+      } else {
+        msg.author.send('Success.  There are now '+(user.recruitsAvailable+1)+' warriors available for recruiting.');
+      }
+    })
   }
 }
 
