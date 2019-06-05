@@ -100,11 +100,11 @@ mongo.connect(error => {
   // })
 
   // temp
-  const u = db.collection('users');
-  const cur = u.find({});
-  cur.toArray((error, users) => {
-    users.forEach(user => {
-      u.updateOne({_id:user._id}, {$set: {recruitsAvailable:user.recuitsAvailable}})
-    })
-  })
+  // const u = db.collection('users');
+  // const cur = u.find({});
+  // cur.toArray((error, users) => {
+  //   users.forEach(user => {
+  //     u.updateOne({_id:user._id}, {$set: {recruitsAvailable:user.recuitsAvailable}})
+  //   })
+  // })
 })

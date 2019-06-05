@@ -117,6 +117,12 @@ const commands = {
     if (msg.channel.type == 'dm') {
       dm.buyRecruit(db, discord, msg);
     }
+  },
+
+  battleResults: function(db, discord, msg) {
+    if (msg.channel.type == 'dm') {
+      dm.battleResults(db, discord, msg);
+    }
   }
 }
 

@@ -158,6 +158,8 @@ export default class Battle {
       shortDescription: this.shortDescription,
       discordIds: [this.warrior1.discordId, this.warrior2.discordId],
       userIds: [this.warrior1.userId, this.warrior2.userId],
+      warriorIds: [this.warrior1._id, this.warrior2._id],
+      warriorNames: [this.warrior1.name, this.warrior2.name]
     }
 
     const battleresultsCollection = this.db.collection('battleresults');
