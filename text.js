@@ -109,7 +109,7 @@ const text = {
             createdAt: new Date(),
             tag: msg.author.tag,
             username: msg.author.username,
-            nickname: msg.member.nickname,
+            nickname: msg.member.nickname ? msg.member.nickname : msg.author.username,
             avatar: msg.author.avatar,
             avatarURL: msg.author.avatarURL,
             gems: 0,
