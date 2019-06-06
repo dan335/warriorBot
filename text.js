@@ -113,7 +113,7 @@ const text = {
             avatar: msg.author.avatar,
             avatarURL: msg.author.avatarURL,
             gems: 0,
-            recuitsAvailable: 3
+            recruitsAvailable: 3
           },
           $set: {
             updatedAt: new Date()
