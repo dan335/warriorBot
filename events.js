@@ -51,24 +51,15 @@ const events = {
 
             const attackMax = functions.arrayMax(attack.attackRolls);
 
-            let am = '__**Attack Launched**__\nAn attack on on **'+functions.escapeMarkdown(attack.defendingGuild.name)+'** has been launched with a power of **'+Math.round(attackMax*100)+'**.  They have '+dateFns.format(dateFns.addMilliseconds(new Date(0), _s.attackDuration), 'm')+' minutes to defend.';
+            let am = '__**Attack Launched**__\nAttack on **'+functions.escapeMarkdown(attack.defendingGuild.name)+'** launched with power of **'+Math.round(attackMax*100)+'**.  They have '+dateFns.format(dateFns.addMilliseconds(new Date(0), _s.attackDuration), 'm')+' minutes to defend.';
             discord.channels.get(attack.attackingGuild.channelId).send(am);
 
-            let dm = '__**Incoming Attack**__\nAttack from **'+functions.escapeMarkdown(attack.attackingGuild.name)+'** with a power of **'+Math.round(attackMax*100)+'**.  Your guild has '+dateFns.format(dateFns.addMilliseconds(new Date(0), _s.attackDuration), 'm')+' minutes to form a defense.  Use **!defend <warrior name> -vs '+functions.escapeMarkdown(attack.attackingGuild.name)+' -m <message>** to join.';
+            let dm = '__**Incoming Attack**__\nAttack from **'+functions.escapeMarkdown(attack.attackingGuild.name)+'** spotted with power of **'+Math.round(attackMax*100)+'**.  Your guild has '+dateFns.format(dateFns.addMilliseconds(new Date(0), _s.attackDuration), 'm')+' minutes to form a defense.  Use **!defend <warrior name> -vs '+functions.escapeMarkdown(attack.attackingGuild.name)+' -m <message>** to join.';
             discord.channels.get(attack.defendingGuild.channelId).send(dm);
 
             // send attacking warrior list
             let aw = '**Attacking Warriors**\n';
-
-            for (let n = 0; n < attack.attackingWarriors.length; n++) {
-              aw += (n+1)+'. ';
-              aw += '**'+functions.escapeMarkdown(attack.attackingWarriors[n].name)+'** rolled **'+Math.round(attack.attackingWarriors[n].roll*100)+'**.';
-              if (attack.attackingWarriors[n].message) {
-                aw += '  '+attack.attackingWarriors[n].message+'\n';
-              } else {
-                aw += '\n';
-              }
-            };
+            aw += printWarriors(attack.attackingWarriors);
 
             discord.channels.get(attack.attackingGuild.channelId).send(aw);
             discord.channels.get(attack.defendingGuild.channelId).send(aw);
@@ -123,42 +114,24 @@ const events = {
                   }
 
                   // print results
-                  let am = '__**Attack Successful**__\nAttack on **'+functions.escapeMarkdown(attack.defendingGuild.name)+'** was successful.  Your attack for **'+Math.round(attackMax*100)+'** beat their defense of **'+Math.round(defenseMax*100)+'** and stole **'+Math.round(stolenGems)+' gems**.';
+                  let am = '__**'+functions.escapeMarkdown(attack.defendingGuild.name)+' Defeated**__\nAttack on **'+functions.escapeMarkdown(attack.defendingGuild.name)+'** was successful.  Your attack for **'+Math.round(attackMax*100)+'** beat their defense of **'+Math.round(defenseMax*100)+'** and stole **'+Math.round(stolenGems)+' gems**.';
 
                   discord.channels.get(attack.attackingGuild.channelId).send(am);
 
-                  let defm = '__**Attack Successful**__\nAttack from **'+functions.escapeMarkdown(attack.attackingGuild.name)+'** was successful.  Their attack power of **'+Math.round(attackMax*100)+'** beat your defense of **'+Math.round(defenseMax*100)+'**.  They stole **'+Math.round(stolenGems)+' gems**.';
+                  let defm = '__**Your Guild Lost**__\nAttack from **'+functions.escapeMarkdown(attack.attackingGuild.name)+'** was successful.  Their attack power of **'+Math.round(attackMax*100)+'** beat your defense of **'+Math.round(defenseMax*100)+'**.  They stole **'+Math.round(stolenGems)+' gems**.';
 
                   discord.channels.get(attack.defendingGuild.channelId).send(defm);
 
                   // send attacking warrior list
                   let aw = '**Attacking Warriors**\n';
-
-                  for (let n = 0; n < attack.attackingWarriors.length; n++) {
-                    aw += (n+1)+'. ';
-                    aw += '**'+functions.escapeMarkdown(attack.attackingWarriors[n].name)+'** rolled **'+Math.round(attack.attackingWarriors[n].roll*100)+'**.';
-                    if (attack.attackingWarriors[n].message) {
-                      aw += '  '+attack.attackingWarriors[n].message+'\n';
-                    } else {
-                      aw += '\n';
-                    }
-                  };
+                  aw += printWarriors(attack.attackingWarriors);
 
                   discord.channels.get(attack.attackingGuild.channelId).send(aw);
                   discord.channels.get(attack.defendingGuild.channelId).send(aw);
 
                   // send defending warrior list
                   let dw = '**Defending Warriors**\n';
-
-                  for (let x = 0; x < attack.defendingWarriors.length; x++) {
-                    dw += (x+1)+'. ';
-                    dw += '**'+functions.escapeMarkdown(attack.defendingWarriors[x].name)+'** rolled **'+Math.round(attack.defendingWarriors[x].roll*100)+'**.';
-                    if (attack.defendingWarriors[x].message) {
-                      dw += '  '+attack.defendingWarriors[x].message+'\n';
-                    } else {
-                      dw += '\n';
-                    }
-                  };
+                  dw += printWarriors(attack.defendingWarriors);
 
                   discord.channels.get(attack.attackingGuild.channelId).send(dw);
                   discord.channels.get(attack.defendingGuild.channelId).send(dw);
@@ -172,38 +145,20 @@ const events = {
 
               discord.channels.get(attack.attackingGuild.channelId).send(am);
 
-              let dm = '__**Attack Unuccessful**__\nAttack from **'+functions.escapeMarkdown(attack.attackingGuild.name)+'** was unsuccessful.  Their attack power of **'+Math.round(attackMax*100)+'** was beat by your defense of **'+Math.round(defenseMax*100)+'**.';
+              let dm = '__**Your Guild Won**__\nAttack from **'+functions.escapeMarkdown(attack.attackingGuild.name)+'** was unsuccessful.  Their attack power of **'+Math.round(attackMax*100)+'** was beat by your defense of **'+Math.round(defenseMax*100)+'**.';
 
               discord.channels.get(attack.defendingGuild.channelId).send(dm);
 
               // send attacking warrior list
               let aw = '**Attacking Warriors**\n';
-
-              for (let n = 0; n < attack.attackingWarriors.length; n++) {
-                aw += (n+1)+'. ';
-                aw += '**'+functions.escapeMarkdown(attack.attackingWarriors[n].name)+'** rolled **'+Math.round(attack.attackingWarriors[n].roll*100)+'**.';
-                if (attack.attackingWarriors[n].message) {
-                  aw += '  '+attack.attackingWarriors[n].message+'\n';
-                } else {
-                  aw += '\n';
-                }
-              };
+              aw += printWarriors(attack.attackingWarriors);
 
               discord.channels.get(attack.attackingGuild.channelId).send(aw);
               discord.channels.get(attack.defendingGuild.channelId).send(aw);
 
               // send defending warrior list
               let dw = '**Defending Warriors**\n';
-
-              for (let x = 0; x < attack.defendingWarriors.length; x++) {
-                dw += (x+1)+'. ';
-                dw += '**'+functions.escapeMarkdown(attack.defendingWarriors[x].name)+'** rolled **'+Math.round(attack.defendingWarriors[x].roll*100)+'**.';
-                if (attack.defendingWarriors[x].message) {
-                  dw += '  '+attack.defendingWarriors[x].message+'\n';
-                } else {
-                  dw += '\n';
-                }
-              };
+              dw += printWarriors(attack.defendingWarriors);
 
               discord.channels.get(attack.attackingGuild.channelId).send(dw);
               discord.channels.get(attack.defendingGuild.channelId).send(dw);
@@ -213,7 +168,23 @@ const events = {
       }
     })
   }
-
 }
 
 export default events
+
+
+var printWarriors = function(warriors) {
+  let msg = '';
+
+  for (let x = 0; x < warriors.length; x++) {
+    msg += (x+1)+'. ';
+    msg += '**'+functions.escapeMarkdown(warriors[x].name)+'** rolled **'+Math.round(warriors[x].roll*100)+'**.';
+    if (warriors[x].message) {
+      msg += '  '+warriors[x].message+'\n';
+    } else {
+      msg += '\n';
+    }
+  };
+
+  return msg;
+}

@@ -1,6 +1,7 @@
 const Filter = require('bad-words')
 const filter = new Filter();
 import _s from './settings.js';
+import functions from './functions.js';
 
 
 const text = {
@@ -166,7 +167,10 @@ const text = {
           m += Math.round(warriors[n].dexterity*100) + '/';
           m += Math.round(warriors[n].agility*100) + '';
           m += ' - ' + Math.round(warriors[n].points);
-          m += '    ' + warriors[n].nickname;
+          m += '    ' + functions.escapeMarkdown(warriors[n].nickname);
+          if (!warriors[n].lost) {
+            m += '   *undefeated*';
+          }
         }
 
         msg.channel.send(m);
@@ -205,7 +209,7 @@ const text = {
           m += '\n';
           for (let n = 0; n < users.length; n++) {
             m += (page*_s.perPage+n+1)+'. ';
-            m += '**'+users[n].nickname+'** - **' + Math.round(users[n].gems) + '** gems\n';
+            m += '**'+functions.escapeMarkdown(users[n].nickname)+'** - **' + Math.round(users[n].gems) + '** gems\n';
           };
           msg.channel.send(m);
         } else {

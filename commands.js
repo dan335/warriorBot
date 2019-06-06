@@ -3,6 +3,7 @@ import dm from './dm.js';
 import shared from './shared.js';
 import dateFns from 'date-fns';
 import events from './events.js';
+import attacks from './attacks.js';
 
 const commands = {
   help: function(db, discord, msg) {
@@ -127,15 +128,21 @@ const commands = {
 
   attack: function(db, discord, msg) {
     if (msg.channel.type == 'dm') {
-      dm.attack(db, discord, msg);
+      attacks.attack(db, discord, msg);
     }
   },
 
   defend: function(db, discord, msg) {
     if (msg.channel.type == 'dm') {
-      dm.defend(db, discord, msg);
+      attacks.defend(db, discord, msg);
     }
-  }
+  },
+
+  attacks: function(db, discord, msg) {
+    if (msg.channel.type == 'dm') {
+      attacks.attacks(db, discord, msg);
+    }
+  },
 }
 
 

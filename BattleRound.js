@@ -30,27 +30,24 @@ export default class BattleRound {
     if (Math.random() <= 0.1) landed = Math.min(1, landed * 2);
     if (Math.random() <= 0.05) landed = Math.min(1, landed * 10);
 
-    let dodged = ((Math.random() * 0.75 + 0.25) * defender.agility) > 0.72;
+    //let dodged = ((Math.random() * 0.75 + 0.25) * defender.agility) > 0.72;
     let blocked = (Math.random() * defender.agility) > 0.27;
 
-    if (!dodged && !blocked) {
+    if (!blocked) {
       defender.health -= damage * landed;
     }
 
-    let description = attacker.name+' swings at '+defender.name+' for '+Math.round(damage*landed)+' damage.';
-    if (dodged) {
-      description += ' '+defender.name+' dodged.';
-    } else if (blocked) {
+    let description = '**'+attacker.name+'** swings at **'+defender.name+'** for **'+Math.round(damage*landed)+'** damage.';
+    if (blocked) {
       description += ' '+defender.name+' blocked.';
     }
-    if (!dodged && !blocked) {
-      description += ' '+defender.name+' has '+Math.round(defender.health)+' health left.';
+    if (!blocked) {
+      description += ' '+defender.name+' has **'+Math.round(defender.health)+'** health left.';
     }
 
     return ({
       damage: damage,
       landed: landed,
-      dodged: dodged,
       blocked: blocked,
       description: description,
       attacker: attacker,
