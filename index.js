@@ -18,6 +18,7 @@ mongo.connect(error => {
   const db = mongo.db(process.env.MONGO_DB);
 
   db.createIndex('guilds', {discordId:1});
+  db.createIndex('guilds', {name:1});
   db.createIndex('users', {discordId:1});
   db.createIndex('users', {guildDiscordId:1});
   db.createIndex('users', {username:1});
@@ -90,9 +91,8 @@ mongo.connect(error => {
 
   // half hour
   const now = new Date();
-  const minutes = dateFns.getMinutes(now);
   let next;
-  if (minutes < 30) {
+  if (dateFns.getMinutes(now) < 30) {
     next = dateFns.setMinutes(now, 30);
   } else {
     next = dateFns.endOfHour(now);
@@ -104,6 +104,28 @@ mongo.connect(error => {
       events.halfHour(db, discord);
     }, 1000 * 60 * 30);
   }, dateFns.differenceInMilliseconds(next, now));
+
+
+  // ten minutes
+  let nextTen = dateFns.addMinutes(now, 10 - dateFns.getMinutes(now));
+  nextTen = dateFns.startOfMinute(nextTen);
+
+  setTimeout(() => {
+    events.tenMinutes(db, discord);
+
+    setInterval(() => {
+      events.tenMinutes(db, discord);
+    }, 1000 * 60 * 10);
+  }, dateFns.differenceInMilliseconds(nextTen, now));
+
+
+  // minute
+  setTimeout(() => {
+    events.minute(db, discord);
+    setInterval(() => {
+      events.minute(db, discord);
+    }, 1000 * 60);
+  }, dateFns.differenceInMilliseconds(dateFns.endOfMinute(now), now));
 
 
   // // temp - fix names

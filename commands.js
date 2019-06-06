@@ -129,6 +129,12 @@ const commands = {
     if (msg.channel.type == 'dm') {
       dm.attack(db, discord, msg);
     }
+  },
+
+  defend: function(db, discord, msg) {
+    if (msg.channel.type == 'dm') {
+      dm.defend(db, discord, msg);
+    }
   }
 }
 

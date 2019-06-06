@@ -4,7 +4,9 @@ const _s = {
   maxEnergy: 10,
   perPage: 15,
   maxEnergy: 10,
-  buyRecruitCost: 600
+  buyRecruitCost: 600,
+  attackCost: 5,
+  attackDuration: 1000 * 60 * 10
 }
 
 
