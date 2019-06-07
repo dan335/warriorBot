@@ -170,7 +170,7 @@ const text = {
           m += ' - ' + Math.round(warriors[n].points);
           m += '    ' + functions.escapeMarkdown(warriors[n].nickname);
           if (!warriors[n].lost) {
-            m += '   *undefeated*';
+            m += '   :crown:';
           }
         }
 
