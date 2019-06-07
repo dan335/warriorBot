@@ -74,7 +74,7 @@ const attacks = {
     const roll = Math.random();
 
     // check if warrior is already defending.  only way is to get attack from db
-    const at = await attacksCollection.findOne({'attackingGuild.name':guildName, 'defendingGuild.discordId':user.guildDiscordId, isAttacking:false});
+    const attack = await attacksCollection.findOne({'attackingGuild.name':guildName, 'defendingGuild.discordId':user.guildDiscordId});
 
     if (at) {
       at.defendingWarriors.forEach(wa => {
@@ -89,7 +89,7 @@ const attacks = {
     }
 
     //
-    attacksCollection.findOneAndUpdate({'attackingGuild.name':guildName, 'defendingGuild.discordId':user.guildDiscordId, isAttacking:false}, {
+    attacksCollection.updateOne({'attackingGuild.name':guildName, 'defendingGuild.discordId':user.guildDiscordId}, {
       $set: {
         updatedAt: new Date()
       },
@@ -104,23 +104,25 @@ const attacks = {
         },
         defenseRolls: roll
       }
-    }, {returnOriginal: false}, (error, result) => {
+    }, {}, (error, result) => {
       if (error) {
-        console.log('Error defend:findAndModify');
+        console.log('Error defend:updateOne');
         console.log(error);
       } else {
-        if (result.value) {
-          const defenseMax = functions.arrayMax(result.value.defenseRolls);
+        attack.defenseRolls.push(roll);
 
-          warriorsCollection.updateOne({_id:warrior._id}, {$inc:{energy:_s.attackCost*-1}});
+        const defenseMax = functions.arrayMax(attack.defenseRolls);
 
-          msg.author.send('**'+warrior.name+"** has joined your guild's defense against an attack from  **"+functions.escapeMarkdown(result.value.attackingGuild.name)+"**.  You rolled a **"+Math.round(roll*100)+"** and your guild now has an defense power of **"+Math.round(defenseMax*100)+"**.");
+        warriorsCollection.updateOne({_id:warrior._id}, {$inc:{energy:_s.attackCost*-1}});
 
-          discord.channels.get(result.value.defendingGuild.channelId).send('**'+warrior.name+'** has joined the defense against an attack from  **'+functions.escapeMarkdown(result.value.attackingGuild.name)+'**.  They rolled a **'+Math.round(roll*100)+'** and your defense now has a power of **'+Math.round(defenseMax*100)+'**. Use **!defend <warrior name> -vs '+functions.escapeMarkdown(result.value.attackingGuild.name)+'** to join the attack.');
+        const diff = new Date().getTime() - new Date(attack.createdAt).getTime();
+        const minutes = dateFns.format(dateFns.addMilliseconds(new Date(0), diff), 'm');
 
-        } else {
-          msg.author.send('Could not find an attack from **'+guildName+'**.');
-        }
+        msg.author.send('**'+warrior.name+"** has joined your guild's defense against an attack from **"+functions.escapeMarkdown(attack.attackingGuild.name)+"**.  You rolled a **"+Math.round(roll*100)+"** and your guild now has an defense power of **"+Math.round(defenseMax*100)+"**.  You have **"+minutes+"** minutes left to defend.");
+
+        discord.channels.get(attack.defendingGuild.channelId).send('**'+warrior.name+'** has joined the defense against an attack from  **'+functions.escapeMarkdown(attack.attackingGuild.name)+'**.  They rolled a **'+Math.round(roll*100)+'** and your defense now has a power of **'+Math.round(defenseMax*100)+'**.  You have **'+minutes+'** minutes left to defend.');
+
+        discord.channels.get(attack.attackingGuild.channelId).send("**"+warrior.name+"** has joined **"+functions.escapeMarkdown(attack.attackingGuild.name)+"**'s defense and rolled a **"+Math.round(roll*100)+"**.  Their defense is now **"+Math.round(defenseMax*100)+"**.  You have **"+minutes+"** minutes left to attack.")
       }
     });
   },
@@ -214,7 +216,7 @@ const attacks = {
     const roll = Math.random();
 
     // get attack
-    let attack = await attacksCollection.findOne({'attackingGuild.guildId':attackingGuild._id, 'defendingGuild.guildId':defendingGuild._id, isAttacking:true});
+    let attack = await attacksCollection.findOne({'attackingGuild.guildId':attackingGuild._id, 'defendingGuild.guildId':defendingGuild._id});
 
     if (attack) {
 
@@ -256,9 +258,14 @@ const attacks = {
         } else {
           warriorsCollection.updateOne({_id:warrior._id}, {$inc:{energy:_s.attackCost*-1}});
 
-          msg.author.send('**'+warrior.name+'** has joined an attack on **'+defendingGuild.name+'**.  You rolled a **'+Math.round(roll*100)+'** and your guild now has an attack power of **'+Math.round(attackMax*100)+'**.');
+          const diff = new Date().getTime() - new Date(attack.createdAt).getTime();
+          const minutes = dateFns.format(dateFns.addMilliseconds(new Date(0), diff), 'm');
 
-          discord.channels.get(attackingGuild.channelId).send('**'+warrior.name+'** has joined the attack on **'+defendingGuild.name+'**.  They rolled a **'+Math.round(roll*100)+'** and your attack now has a power of **'+Math.round(attackMax*100)+'**.');
+          msg.author.send('**'+warrior.name+'** has joined an attack on **'+defendingGuild.name+'**.  You rolled a **'+Math.round(roll*100)+'** and your guild now has an attack power of **'+Math.round(attackMax*100)+'**.  You have **'+minutes+'** minutes left to attack.');
+
+          discord.channels.get(attackingGuild.channelId).send('**'+warrior.name+'** has joined the attack on **'+defendingGuild.name+'**.  They rolled a **'+Math.round(roll*100)+'** and your attack now has **'+Math.round(attackMax*100)+'** power.  You have **'+minutes+'** minutes left to attack.');
+
+          discord.channels.get(defendingGuild.channelId).send('**'+warrior.name+'** has joined the attack from **'+attackingGuild.name+'**.  They rolld a **'+Math.round(roll*100)+'** and their attack now has **'+Math.round(attackMax*100)+'** power.  You have **'+minutes+'** minutes left to defend.');
         }
       })
 
@@ -290,7 +297,6 @@ const attacks = {
         ],
         defendingWarriors: [],
         createdAt: new Date(),
-        startedAt: new Date(),  // when started attacking or defending
         updatedAt: new Date(),
         isAttacking: true,
         attackRolls: [roll],
@@ -307,6 +313,9 @@ const attacks = {
           msg.author.send('**'+warrior.name+'** has started an attack on **'+defendingGuild.name+'** with a power of **'+Math.round(roll*100)+'**.  Members of your guild have '+dateFns.format(dateFns.addMilliseconds(new Date(0), _s.attackDuration), 'm')+' minutes to join you in the fight.');
 
           discord.channels.get(attackingGuild.channelId).send('__**Attack Started**__\n**'+warrior.name+'** has started an attack on **'+defendingGuild.name+'** with a power of **'+Math.round(roll*100)+'**.  You have '+dateFns.format(dateFns.addMilliseconds(new Date(0), _s.attackDuration), 'm')+' minutes to join in and try to increase the attack power.  Use **!attack <warrior name> -vs '+defendingGuild.name+'** to join the attack.');
+
+          let dm = '__**Incoming Attack**__\nAttack from **'+functions.escapeMarkdown(attackingGuild.name)+'** spotted with power of **'+Math.round(attackMax*100)+'**.  Your guild has '+dateFns.format(dateFns.addMilliseconds(new Date(0), _s.attackDuration), 'm')+' minutes to form a defense.  Use **!defend <warrior name> -vs '+functions.escapeMarkdown(attackingGuild.name)+' -m <message>** to join.';
+          discord.channels.get(defendingGuild.channelId).send(dm);
         }
       })
     }
@@ -315,22 +324,31 @@ const attacks = {
 
 
   attacks: async function(db, discord, msg) {
-    // get user
-    const usersCollection = db.collection('users');
-    const user = await usersCollection.findOne({discordId: msg.author.id});
-    if (!user) {
-      msg.author.send("Looks like you haven't joined the game yet.  Type **!joinGame** in a public channel to join the game.");
-      return;
-    }
-
     const attacksCollection = db.collection('attacks');
+    let guildDiscordId;
+
+    if (msg.channel.type == 'dm') {
+      // get user
+      const usersCollection = db.collection('users');
+      const user = await usersCollection.findOne({discordId: msg.author.id});
+      if (!user) {
+        msg.author.send("Looks like you haven't joined the game yet.  Type **!joinGame** in a public channel to join the game.");
+        return;
+      }
+
+      guildDiscordId = guildDiscordId;
+
+    } else if (msg.channel.type == 'text') {
+      guildDiscordId = msg.channel.id;
+    }
 
     const cursor = attacksCollection.find({
       $or: [
-        {'attackingGuild.discordId': user.guildDiscordId},
-        {'defendingGuild.discordId': user.guildDiscordId}
+        {'attackingGuild.discordId': guildDiscordId},
+        {'defendingGuild.discordId': guildDiscordId}
       ]
     }, {sort:{createdAt:-1}});
+
 
     cursor.toArray((error, result) => {
       if (error) {
@@ -338,10 +356,10 @@ const attacks = {
         console.log(error);
       } else {
         const attacks = result.filter(r => {
-          return r.attackingGuild.discordId == user.guildDiscordId;
+          return r.attackingGuild.discordId == guildDiscordId;
         });
         const defends = result.filter(r => {
-          return r.defendingGuild.discordId == user.guildDiscordId && !r.isAttacking;
+          return r.defendingGuild.discordId == guildDiscordId;
         });
 
         let m = "__Your Guild's Attacks__\n";
@@ -350,14 +368,10 @@ const attacks = {
           for (let n = 0; n < attacks.length; n++) {
             m += 'Attack on **'+functions.escapeMarkdown(attacks[n].defendingGuild.name)+'**.';
 
-            const diff = new Date().getTime() - new Date(attacks[n].startedAt).getTime();
+            const diff = new Date().getTime() - new Date(attacks[n].createdAt).getTime();
             const minutes = dateFns.format(dateFns.addMilliseconds(new Date(0), diff), 'm');
 
-            if (attacks[n].isAttacking) {
-              m += '  You have **'+m+'** minutes left to join.\n';
-            } else {
-              m += '  They have **'+m+'** minutes left to defend.\n';
-            }
+            m += '  You have **'+m+'** minutes left to join.\n';
           }
         } else {
           m += 'No attacks.\n';
@@ -370,7 +384,7 @@ const attacks = {
           for (let n = 0; n < defends.length; n++) {
             m += 'Attack from **'+functions.escapeMarkdown(defends[n].attackingGuild.name)+'**.';
 
-            const diff = new Date().getTime() - new Date(defends[n].startedAt).getTime();
+            const diff = new Date().getTime() - new Date(defends[n].createdAt).getTime();
             const minutes = dateFns.format(dateFns.addMilliseconds(new Date(0), diff), 'm');
 
             m += '  You have **'+m+'** minutes left to defend.\n';

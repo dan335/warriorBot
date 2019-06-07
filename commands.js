@@ -139,9 +139,7 @@ const commands = {
   },
 
   attacks: function(db, discord, msg) {
-    if (msg.channel.type == 'dm') {
-      attacks.attacks(db, discord, msg);
-    }
+    attacks.attacks(db, discord, msg);
   },
 }
 
