@@ -12,13 +12,17 @@ export default class Battle {
     this.user1 = user1;
     this.user2 = user2;
 
-    this.warrior1.health = 100;
-    this.warrior2.health = 100;
+    this.warrior1.health = (Math.random() * 0.5 + 0.5) * this.warrior1.strength * 200 + 50;
+    this.warrior2.health = (Math.random() * 0.5 + 0.5) * this.warrior2.strength * 200 + 50;
     this.warrior1.swingsFirst = false;
     this.warrior2.swingsFirst = true;
     this.isTie = false;
     this.warrior1.died = false;
     this.warrior2.died = false;
+
+    this.description = '';
+    this.description += '**'+this.warrior1.name+'** starts with **'+Math.round(this.warrior1.health)+'** health.\n';
+    this.description += '**'+this.warrior2.name+'** starts with **'+Math.round(this.warrior2.health)+'** health.\n';
 
     const warriorsCollection = db.collection('warriors');
     const usersCollection = db.collection('users');
@@ -33,7 +37,6 @@ export default class Battle {
     }
 
     // get description for rounds
-    this.description = '';
     this.rounds.forEach(round => {
       round.swings.forEach(swing => {
         this.description += swing.description + '\n';
