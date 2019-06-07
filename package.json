@@ -4,8 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "cross-env DISCORD_TOKEN=NTg0MjU2ODQ0NzEzNjg5MDk4.XPIRoQ.OahhhnXT4pjx6J4P5wuLEWfCD3k NODE_ENV=development MONGO_URL=mongodb://localhost MONGO_DB=warriors nodemon --exec ./node_modules/.bin/babel-node index.js",
-    "prod": "cross-env DISCORD_TOKEN=NTg0MjU2ODQ0NzEzNjg5MDk4.XPIRoQ.OahhhnXT4pjx6J4P5wuLEWfCD3k NODE_ENV=production MONGO_URL=mongodb://localhost MONGO_DB=warriors ./node_modules/.bin/babel-node index.js"
+    "dev": "cross-env DISCORD_TOKEN=NTg0MjU2ODQ0NzEzNjg5MDk4.XPnpDQ.-ua0-87Ow2HRkDUY0dRc789CEAM NODE_ENV=development MONGO_URL=mongodb://localhost MONGO_DB=warriors nodemon --exec ./node_modules/.bin/babel-node index.js",
   },
   "author": "",
   "license": "ISC",

@@ -42,7 +42,7 @@ const dm = {
 
     let m = '';
     m += '__Build your army.__\n';
-    m += 'Recruit warriors with **!recruit <name>**.  Retire warriors with **!retire <name>**.  You can only recuit a warrior if there is one available.  Every day one more becomes available.  You can have ' + _s.maxWarriors + ' warriors max.\n';
+    m += 'Recruit warriors with **!recruit <name>**.  Retire warriors with **!retire <name>**.  You can only recruit a warrior if there is one available.  Every day one more becomes available.  You can have ' + _s.maxWarriors + ' warriors max.\n';
     m += '\n';
     m += '__Challenge players in the arena.__\n';
     m += "Use **!battle <warrior name> -vs <other warrior name>** to send your warriors off to battle in the arena and win gems.  If your warrior beats a warrior ranked higher than them they will win more than beating one ranked lower.\n";

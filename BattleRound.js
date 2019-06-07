@@ -22,17 +22,10 @@ export default class BattleRound {
 
 
   swing(attacker, defender) {
-    //let hp = (Math.random() * 0.75 + 0.25) * attacker.strength * 400;
-
-    let damage = (Math.random() * 0.75 + 0.25) * attacker.strength * 300;
+    let damage = (Math.random() * 0.75 + 0.25) * attacker.dexterity * 200;
     if (Math.random() <= 0.1) damage *= 1.5;
     if (Math.random() <= 0.05) damage *= 3;
 
-    // let landed = Math.random() * attacker.dexterity;
-    // if (Math.random() <= 0.1) landed = Math.min(1, landed * 2);
-    // if (Math.random() <= 0.05) landed = Math.min(1, landed * 10);
-
-    //let dodged = ((Math.random() * 0.75 + 0.25) * defender.agility) > 0.72;
     let blocked = (Math.random() * defender.agility) > 0.27;
 
     if (!blocked) {
