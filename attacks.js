@@ -314,7 +314,7 @@ const attacks = {
 
           discord.channels.get(attackingGuild.channelId).send('__**Attack Started**__\n**'+warrior.name+'** has started an attack on **'+defendingGuild.name+'** with a power of **'+Math.round(roll*100)+'**.  You have '+dateFns.format(dateFns.addMilliseconds(new Date(0), _s.attackDuration), 'm')+' minutes to join in and try to increase the attack power.  Use **!attack <warrior name> -vs '+defendingGuild.name+'** to join the attack.');
 
-          let dm = '__**Incoming Attack**__\nAttack from **'+functions.escapeMarkdown(attackingGuild.name)+'** spotted with power of **'+Math.round(attackMax*100)+'**.  Your guild has '+dateFns.format(dateFns.addMilliseconds(new Date(0), _s.attackDuration), 'm')+' minutes to form a defense.  Use **!defend <warrior name> -vs '+functions.escapeMarkdown(attackingGuild.name)+' -m <message>** to join.';
+          let dm = '__**Incoming Attack**__\nAttack from **'+functions.escapeMarkdown(attackingGuild.name)+'** spotted with power of **'+Math.round(roll*100)+'**.  Your guild has '+dateFns.format(dateFns.addMilliseconds(new Date(0), _s.attackDuration), 'm')+' minutes to form a defense.  Use **!defend <warrior name> -vs '+functions.escapeMarkdown(attackingGuild.name)+' -m <message>** to join.';
           discord.channels.get(defendingGuild.channelId).send(dm);
         }
       })
@@ -336,10 +336,10 @@ const attacks = {
         return;
       }
 
-      guildDiscordId = guildDiscordId;
+      guildDiscordId = user.guildDiscordId;
 
     } else if (msg.channel.type == 'text') {
-      guildDiscordId = msg.channel.id;
+      guildDiscordId = msg.guild.id;
     }
 
     const cursor = attacksCollection.find({
@@ -349,12 +349,12 @@ const attacks = {
       ]
     }, {sort:{createdAt:-1}});
 
-
     cursor.toArray((error, result) => {
       if (error) {
         console.log('Error attacks:toArray');
         console.log(error);
       } else {
+
         const attacks = result.filter(r => {
           return r.attackingGuild.discordId == guildDiscordId;
         });
@@ -368,10 +368,10 @@ const attacks = {
           for (let n = 0; n < attacks.length; n++) {
             m += 'Attack on **'+functions.escapeMarkdown(attacks[n].defendingGuild.name)+'**.';
 
-            const diff = new Date().getTime() - new Date(attacks[n].createdAt).getTime();
+            const diff = _s.attackDuration - (new Date().getTime() - new Date(attacks[n].createdAt).getTime());
             const minutes = dateFns.format(dateFns.addMilliseconds(new Date(0), diff), 'm');
 
-            m += '  You have **'+m+'** minutes left to join.\n';
+            m += '  You have **'+minutes+'** minutes left to join.\n';
           }
         } else {
           m += 'No attacks.\n';
@@ -384,16 +384,20 @@ const attacks = {
           for (let n = 0; n < defends.length; n++) {
             m += 'Attack from **'+functions.escapeMarkdown(defends[n].attackingGuild.name)+'**.';
 
-            const diff = new Date().getTime() - new Date(defends[n].createdAt).getTime();
+            const diff = _s.attackDuration -  (new Date().getTime() - new Date(defends[n].createdAt).getTime());
             const minutes = dateFns.format(dateFns.addMilliseconds(new Date(0), diff), 'm');
 
-            m += '  You have **'+m+'** minutes left to defend.\n';
+            m += '  You have **'+minutes+'** minutes left to defend.\n';
           }
         } else {
           m += 'No incoming attacks.\n';
         }
 
-        msg.author.send(m);
+        if (msg.channel.type == 'dm') {
+          msg.author.send(m);
+        } else {
+          msg.channel.send(m);
+        }
       }
     })
   }

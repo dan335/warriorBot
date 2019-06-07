@@ -1,6 +1,9 @@
 main bot
 https://discordapp.com/oauth2/authorize?&client_id=584250457254527007&scope=bot
 
+dev bot
+https://discordapp.com/oauth2/authorize?&client_id=584256844713689098&scope=bot
+
 ### attacking guilds
 
 attack together somehow
