@@ -77,12 +77,16 @@ const attacks = {
     const attack = await attacksCollection.findOne({'attackingGuild.name':guildName, 'defendingGuild.discordId':user.guildDiscordId});
 
     if (attack) {
+      let alreadyDefending = false;
       attack.defendingWarriors.forEach(wa => {
-        if (wa.warriorId == warrior._id) {
-          msg.author.send('You cannot defend more than once.');
-          return;
+        if (wa.warriorId.toString() == warrior._id.toString()) {
+          alreadyDefending = setResultChannel
         }
       })
+      if (alreadyDefending) {
+        msg.author.send('You cannot defend more than once.');
+        return;
+      }
     } else {
       msg.author.send('Could not find an attack from **'+guildName+'**.');
       return;
@@ -112,17 +116,19 @@ const attacks = {
         attack.defenseRolls.push(roll);
 
         const defenseMax = functions.arrayMax(attack.defenseRolls);
+        const attackMax = functions.arrayMax(attack.attackRolls);
 
         warriorsCollection.updateOne({_id:warrior._id}, {$inc:{energy:_s.attackCost*-1}});
 
-        const diff = new Date().getTime() - new Date(attack.createdAt).getTime();
+        let diff = _s.attackDuration - (new Date().getTime() - new Date(attack.createdAt).getTime());
+        diff = Math.max(0, diff);
         const minutes = dateFns.format(dateFns.addMilliseconds(new Date(0), diff), 'm');
 
-        msg.author.send('**'+warrior.name+"** has joined your guild's defense against an attack from **"+functions.escapeMarkdown(attack.attackingGuild.name)+"**.  You rolled a **"+Math.round(roll*100)+"** and your guild now has an defense power of **"+Math.round(defenseMax*100)+"**.  You have **"+minutes+"** minutes left to defend.");
+        msg.author.send('**'+warrior.name+"** has joined your guild's defense against an attack from **"+functions.escapeMarkdown(attack.attackingGuild.name)+"**.  You rolled a **"+Math.round(roll*100)+"** and your guild now has an defense power of **"+Math.round(defenseMax*100)+"**.  They have **"+Math.round(attackMax*100)+"**.  You have **"+minutes+"** minutes left to defend.");
 
-        discord.channels.get(attack.defendingGuild.channelId).send('**'+warrior.name+'** has joined the defense against an attack from  **'+functions.escapeMarkdown(attack.attackingGuild.name)+'**.  They rolled a **'+Math.round(roll*100)+'** and your defense now has a power of **'+Math.round(defenseMax*100)+'**.  You have **'+minutes+'** minutes left to defend.');
+        discord.channels.get(attack.defendingGuild.channelId).send('**'+warrior.name+'** has joined the defense against an attack from  **'+functions.escapeMarkdown(attack.attackingGuild.name)+'**.  They rolled a **'+Math.round(roll*100)+'** and your defense now has a power of **'+Math.round(defenseMax*100)+'**.  They have **"+Math.round(attackMax*100)+"**.  You have **'+minutes+'** minutes left to defend.');
 
-        discord.channels.get(attack.attackingGuild.channelId).send("**"+warrior.name+"** has joined **"+functions.escapeMarkdown(attack.attackingGuild.name)+"**'s defense and rolled a **"+Math.round(roll*100)+"**.  Their defense is now **"+Math.round(defenseMax*100)+"**.  You have **"+minutes+"** minutes left to attack.")
+        discord.channels.get(attack.attackingGuild.channelId).send("**"+warrior.name+"** has joined **"+functions.escapeMarkdown(attack.attackingGuild.name)+"**'s defense and rolled a **"+Math.round(roll*100)+"**.  Their defense is now **"+Math.round(defenseMax*100)+"**.  You have **"+Math.round(attackMax*100)+"**.  You have **"+minutes+"** minutes left to attack.")
       }
     });
   },
@@ -221,13 +227,15 @@ const attacks = {
     if (attack) {
 
       // check if warrior is already attacking
-      if (attack.attackingWarriors && attack.attackingWarriors.length) {
-        attack.attackingWarriors.forEach(w => {
-          if (w.warriorId == warrior._id) {
-            msg.author.send('This warrior is already attacking.');
-            return;
-          }
-        })
+      let alreadyAttacking = false;
+      attack.attackingWarriors.forEach(w => {
+        if (w.warriorId.toString() == warrior._id.toString()) {
+          alreadyAttacking = true;
+        }
+      })
+      if (alreadyAttacking) {
+        msg.author.send('This warrior is already attacking.');
+        return;
       }
 
 
@@ -258,14 +266,17 @@ const attacks = {
         } else {
           warriorsCollection.updateOne({_id:warrior._id}, {$inc:{energy:_s.attackCost*-1}});
 
-          const diff = new Date().getTime() - new Date(attack.createdAt).getTime();
+          const defendMax = Math.round(functions.arrayMax(attack.defenseRolls)*100);
+
+          let diff = _s.attackDuration - (new Date().getTime() - new Date(attack.createdAt).getTime());
+          diff = Math.max(0, diff);
           const minutes = dateFns.format(dateFns.addMilliseconds(new Date(0), diff), 'm');
 
-          msg.author.send('**'+warrior.name+'** has joined an attack on **'+defendingGuild.name+'**.  You rolled a **'+Math.round(roll*100)+'** and your guild now has an attack power of **'+Math.round(attackMax*100)+'**.  You have **'+minutes+'** minutes left to attack.');
+          msg.author.send('**'+warrior.name+'** has joined an attack on **'+defendingGuild.name+'**.  You rolled a **'+Math.round(roll*100)+'** and your guild now has an attack power of **'+Math.round(attackMax*100)+'**.  They have **'+defendMax+'**.  You have **'+minutes+'** minutes left to attack.');
 
-          discord.channels.get(attackingGuild.channelId).send('**'+warrior.name+'** has joined the attack on **'+defendingGuild.name+'**.  They rolled a **'+Math.round(roll*100)+'** and your attack now has **'+Math.round(attackMax*100)+'** power.  You have **'+minutes+'** minutes left to attack.');
+          discord.channels.get(attackingGuild.channelId).send('**'+warrior.name+'** has joined the attack on **'+defendingGuild.name+'**.  They rolled a **'+Math.round(roll*100)+'** and your attack now has **'+Math.round(attackMax*100)+'** power.  They have **'+defendMax+'**.  You have **'+minutes+'** minutes left to attack.');
 
-          discord.channels.get(defendingGuild.channelId).send('**'+warrior.name+'** has joined the attack from **'+attackingGuild.name+'**.  They rolld a **'+Math.round(roll*100)+'** and their attack now has **'+Math.round(attackMax*100)+'** power.  You have **'+minutes+'** minutes left to defend.');
+          discord.channels.get(defendingGuild.channelId).send('**'+warrior.name+'** has joined the attack from **'+attackingGuild.name+'**.  They rolled a **'+Math.round(roll*100)+'** and their attack now has **'+Math.round(attackMax*100)+'** power.  You have **'+defendMax+'**.  You have **'+minutes+'** minutes left to defend.');
         }
       })
 
@@ -368,7 +379,13 @@ const attacks = {
           for (let n = 0; n < attacks.length; n++) {
             m += 'Attack on **'+functions.escapeMarkdown(attacks[n].defendingGuild.name)+'**.';
 
-            const diff = _s.attackDuration - (new Date().getTime() - new Date(attacks[n].createdAt).getTime());
+            const attackMax = functions.arrayMax(attacks[n].attackRolls);
+            const defendMax = functions.arrayMax(attacks[n].defenseRolls);
+
+            m += '  **'+Math.round(attackMax*100)+'** vs **'+Math.round(defendMax*100)+'**.';
+
+            let diff = _s.attackDuration - (new Date().getTime() - new Date(attacks[n].createdAt).getTime());
+            diff = Math.max(0, diff);
             const minutes = dateFns.format(dateFns.addMilliseconds(new Date(0), diff), 'm');
 
             m += '  You have **'+minutes+'** minutes left to join.\n';
@@ -384,7 +401,13 @@ const attacks = {
           for (let n = 0; n < defends.length; n++) {
             m += 'Attack from **'+functions.escapeMarkdown(defends[n].attackingGuild.name)+'**.';
 
-            const diff = _s.attackDuration -  (new Date().getTime() - new Date(defends[n].createdAt).getTime());
+            const attackMax = functions.arrayMax(defends[n].attackRolls);
+            const defendMax = functions.arrayMax(defends[n].defenseRolls);
+
+            m += '  **'+Math.round(attackMax*100)+'** vs **'+Math.round(defendMax*100)+'**.';
+
+            let diff = _s.attackDuration -  (new Date().getTime() - new Date(defends[n].createdAt).getTime());
+            diff = Math.max(0, diff);
             const minutes = dateFns.format(dateFns.addMilliseconds(new Date(0), diff), 'm');
 
             m += '  You have **'+minutes+'** minutes left to defend.\n';
