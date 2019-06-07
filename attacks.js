@@ -76,8 +76,8 @@ const attacks = {
     // check if warrior is already defending.  only way is to get attack from db
     const attack = await attacksCollection.findOne({'attackingGuild.name':guildName, 'defendingGuild.discordId':user.guildDiscordId});
 
-    if (at) {
-      at.defendingWarriors.forEach(wa => {
+    if (attack) {
+      attack.defendingWarriors.forEach(wa => {
         if (wa.warriorId == warrior._id) {
           msg.author.send('You cannot defend more than once.');
           return;
