@@ -3,7 +3,7 @@ export default function rip(db, discord, msg) {
 
   let m = '__RIP__\n\n';
 
-  const cursor = ripsCollection.find({}, {sort:{gems:-1}});
+  const cursor = ripsCollection.find({}, {sort:{gemsWon:-1}});
 
   cursor.toArray((error, rips) => {
     if (!error) {
