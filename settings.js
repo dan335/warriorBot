@@ -5,8 +5,8 @@ const _s = {
   perPage: 15,
   maxEnergy: 10,
   buyRecruitCost: 1000,
-  attackCost: 5,
-  attackDuration: 1000 * 60 * 10
+  attackCost: 6,
+  attackDuration: 1000 * 60 * 60
 }
 
 

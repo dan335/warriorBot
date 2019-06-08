@@ -126,9 +126,9 @@ const attacks = {
 
         msg.author.send('**'+warrior.name+"** has joined your guild's defense against an attack from **"+functions.escapeMarkdown(attack.attackingGuild.name)+"**.  You rolled a **"+Math.round(roll*100)+"** and your guild now has an defense power of **"+Math.round(defenseMax*100)+"**.  They have **"+Math.round(attackMax*100)+"**.  You have **"+minutes+"** minutes left to defend.");
 
-        discord.channels.get(attack.defendingGuild.channelId).send('**'+warrior.name+'** has joined the defense against an attack from  **'+functions.escapeMarkdown(attack.attackingGuild.name)+'**.  They rolled a **'+Math.round(roll*100)+'** and your defense now has a power of **'+Math.round(defenseMax*100)+'**.  They have **"+Math.round(attackMax*100)+"**.  You have **'+minutes+'** minutes left to defend.');
+        discord.channels.get(attack.defendingGuild.channelId).send('**'+warrior.name+'** has joined the defense against an attack from  **'+functions.escapeMarkdown(attack.attackingGuild.name)+'**.  They rolled a **'+Math.round(roll*100)+'** and your defense now has a power of **'+Math.round(defenseMax*100)+'**.  They have **'+Math.round(attackMax*100)+'**.  You have **'+minutes+'** minutes left to defend.');
 
-        discord.channels.get(attack.attackingGuild.channelId).send("**"+warrior.name+"** has joined **"+functions.escapeMarkdown(attack.attackingGuild.name)+"**'s defense and rolled a **"+Math.round(roll*100)+"**.  Their defense is now **"+Math.round(defenseMax*100)+"**.  You have **"+Math.round(attackMax*100)+"**.  You have **"+minutes+"** minutes left to attack.")
+        discord.channels.get(attack.attackingGuild.channelId).send("**"+warrior.name+"** has joined **"+functions.escapeMarkdown(attack.defendingGuild.name)+"**'s defense and rolled a **"+Math.round(roll*100)+"**.  Their defense is now **"+Math.round(defenseMax*100)+"**.  You have **"+Math.round(attackMax*100)+"**.  You have **"+minutes+"** minutes left to attack.")
       }
     });
   },
