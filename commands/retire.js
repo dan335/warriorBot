@@ -33,9 +33,9 @@ export default async function rip(db, discord, msg) {
     return;
   }
 
-  functions.killWarrior(db, discord, warrior, 'Retired.').then(() => {
+  functions.killWarrior(db, discord, warrior, 'was retired.').then(() => {
     msg.author.send(name + " is now retired.");
-    discord.channels.get(guild.channelId).send('**'+functions.escapeMarkdown(user.nickname)+'** retired **'+name+'**.');
+    //discord.channels.get(guild.channelId).send('**'+functions.escapeMarkdown(user.nickname)+'** retired **'+name+'**.');
   }).catch(error => {
     console.log(error);
   })

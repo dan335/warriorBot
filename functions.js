@@ -73,7 +73,7 @@ const functions = {
             return;
           }
 
-          discord.channels.get(guild.channelId).send('**'+warrior.name+'** died. '+cause);
+          discord.channels.get(guild.channelId).send('**'+warrior.name+'** '+cause);
           resolve();
         })
       })

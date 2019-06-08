@@ -20,7 +20,7 @@ const events = {
         warriors.forEach(warrior => {
           const chance = (warrior.age - _s.startAge) / (_s.maxAge - _s.startAge);
           if (Math.random() <= chance) {
-            functions.killWarrior(db, discord, warrior, 'Old age.');
+            functions.killWarrior(db, discord, warrior, 'died of old age.');
           }
         })
       }
