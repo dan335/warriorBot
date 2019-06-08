@@ -4,6 +4,8 @@ import shared from './shared.js';
 import dateFns from 'date-fns';
 import events from './events.js';
 import attacks from './attacks.js';
+import recruit from './commands/recruit.js';
+import rip from './commands/rip.js';
 
 const commands = {
   help: function(db, discord, msg) {
@@ -40,7 +42,7 @@ const commands = {
 
   recruit: function(db, discord, msg) {
     if (msg.channel.type == 'dm') {
-      dm.recruit(db, discord, msg);
+      recruit(db, discord, msg);
     }
   },
 
@@ -141,6 +143,12 @@ const commands = {
   attacks: function(db, discord, msg) {
     attacks.attacks(db, discord, msg);
   },
+
+  rip: function(db, discord, msg) {
+    if (msg.channel.type == 'text') {
+      rip(db, discord, msg);
+    }
+  }
 }
 
 

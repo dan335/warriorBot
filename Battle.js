@@ -1,5 +1,6 @@
 import BattleRound from './BattleRound.js';
 var EloRating = require('elo-rating');
+import functions from './functions.js';
 
 
 export default class Battle {
@@ -150,6 +151,7 @@ export default class Battle {
       this.description += '**'+this.warrior1.name + ' died**.\n';
       this.shortDescription += ' **'+this.warrior1.name + ' died**.';
       warriorsCollection.deleteOne({_id:this.warrior1._id});
+      functions.killWarrior(db, discord, this.warrior1, 'Killed by '+this.warrior2.name+'.');
     }
     // if (!this.warrior2.isWinner && this.warrior2.health <= 0) {
     //   if (Math.random() <= 0.05) {

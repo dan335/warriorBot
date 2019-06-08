@@ -6,7 +6,9 @@ const _s = {
   maxEnergy: 10,
   buyRecruitCost: 1000,
   attackCost: 6,
-  attackDuration: 1000 * 60 * 60
+  attackDuration: 1000 * 60 * 60,
+  maxAge: 80,
+  startAge: 18
 }
 
 

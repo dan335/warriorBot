@@ -10,6 +10,24 @@ const events = {
     // give everyone 1 recruit
     const usersCollection = db.collection('users');
     usersCollection.updateMany({}, {$inc:{recruitsAvailable:1}});
+
+    const warriorsCollection = db.collection('warriors');
+
+    // kill warriors
+    const cursor = warriorsCollection.find({}, {projection:{age:1}});
+    cursor.toArray((error, warriors) => {
+      if (!error) {
+        warriors.forEach(warrior => {
+          const chance = (warrior.age - _s.startAge) / (_s.maxAge - _s.startAge);
+          if (Math.random() <= chance) {
+            functions.killWarrior(db, discord, warrior, 'Old age.');
+          }
+        })
+      }
+    })
+
+    // age warriors
+    warriorsCollection.updateMany({}, {$inc:{age:1}});
   },
 
 
