@@ -6,6 +6,7 @@ import events from './events.js';
 import attacks from './attacks.js';
 import recruit from './commands/recruit.js';
 import rip from './commands/rip.js';
+import retire from './commands/retire.js';
 
 const commands = {
   help: function(db, discord, msg) {
@@ -49,7 +50,7 @@ const commands = {
 
   retire: function(db, discord, msg) {
     if (msg.channel.type == 'dm') {
-      dm.retire(db, discord, msg);
+      retire(db, discord, msg);
     }
   },
 

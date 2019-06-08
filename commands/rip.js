@@ -11,9 +11,9 @@ export default function rip(db, discord, msg) {
         for (let n = 0; n < rips.length; n++) {
           m += (n+1)+'. ';
           m += '**'+rips[n].name+'**';
-          m += ' '+rips[n].strength+'/'+rips[n].dexterity+'/'+rips[n].agility;
-          m += ' gems:**'+rips[n].gemsWon+'**';
-          m += ' points:**'+rips[n].points+'**';
+          m += '   '+Math.round(rips[n].strength*100)+'/'+Math.round(rips[n].dexterity*100)+'/'+Math.round(rips[n].agility*100);
+          m += '   gems:**'+Math.round(rips[n].gemsWon)+'**';
+          m += '   points:**'+Math.round(rips[n].points)+'**';
           m += '    '+rips[n].nickname;
         }
       } else {

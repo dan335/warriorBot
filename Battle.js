@@ -150,7 +150,6 @@ export default class Battle {
     if (this.warrior1.died) {
       this.description += '**'+this.warrior1.name + ' died**.\n';
       this.shortDescription += ' **'+this.warrior1.name + ' died**.';
-      warriorsCollection.deleteOne({_id:this.warrior1._id});
       functions.killWarrior(db, discord, this.warrior1, 'Killed by '+this.warrior2.name+'.');
     }
     // if (!this.warrior2.isWinner && this.warrior2.health <= 0) {

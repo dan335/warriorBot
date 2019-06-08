@@ -67,44 +67,6 @@ const dm = {
 
 
 
-  retire: async function(db, discord, msg) {
-    let name = msg.content.replace('!retire', '');
-    name = name.trim();
-
-    if (!name.length) {
-      msg.author.send('Who are you retiring? **!retire <warrior name>**');
-      return;
-    }
-
-    const warriorsCollection = db.collection('warriors');
-    const guildsCollection = db.collection('guilds');
-    const usersCollection = db.collection('users');
-
-    const user = await usersCollection.findOne({discordId:msg.author.id});
-    if (!user) {
-      msg.author.send("I can't find you in my records.  Type **!joinGame** in a public channel to begin.");
-      return;
-    }
-
-    const guild = await guildsCollection.findOne({discordId: user.guildDiscordId});
-    if (!guild) {
-      msg.author.send('I cannot find your guild.');
-      return;
-    }
-
-    warriorsCollection.deleteOne({name:name, discordId:msg.author.id}, {}, (error, result) => {
-      if (result.deletedCount == 1) {
-        msg.author.send(name + " is now retired.");
-
-        discord.channels.get(guild.channelId).send('**'+functions.escapeMarkdown(user.nickname)+'** retired **'+name+'**.');
-      } else {
-        msg.author.send("I could not find a warrior by that name.");
-      }
-    })
-  },
-
-
-
   guildWarriors: async function(db, discord, msg) {
     const usersCollection = db.collection('users');
     const warriorsCollection = db.collection('warriors');
