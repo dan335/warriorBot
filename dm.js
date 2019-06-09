@@ -8,57 +8,6 @@ import functions from './functions.js';
 
 
 const dm = {
-  commands: function(db, discord, msg) {
-    let m = '';
-    m += '**!recruit <name>** - Recruit a new warrior.\n';
-    m += '**!retire <name>** - Retire a warrior.\n';
-    m += '**!buyRecruit** - Buy a recruit token for '+_s.buyRecruitCost+' gems.\n';
-    m += '**!warriors** - View your warriors.\n';
-    m += "**!warriors <player name>** - View another player's warriors.\n";
-    m += "**!guildWarriors <page number>** - View your guild's warriors.  Page number is optional.\n";
-    m += "**!battle <warrior name> -vs <warrior name>** - Put your warrior up against another warrior in the arena.\n";
-    m += "**!battleResults <warrior name>** - View a warriors last 3 battles.\n";
-    m += "**!predict <warrior name> -vs <warrior name>** - Predict who will win.\n";
-    m += '\n';
-    m += "**!guilds <page number>** - View Discord guilds.  Page number is optional.\n";
-    m += "**!attack <warrior name> -vs <guild name> -m <message>** - Send a warrior to attack another guild and bring back loot.  Message is optional.\n";
-    m += "**!defend <warrior name> -vs <guild name> -m <message>** - Defend against an attack.  Message is optional.\n";
-    m += '**!attacks** - View attacks.\n';
-    m += '\n';
-    m += '**!help**\n';
-    m += '**!serverTime**\n';
-    m += "**!leaveGame** - Leave this guild's game.  This will delete your warriors and all your data.\n";
-    msg.author.send(m);
-  },
-
-
-  help: async function(db, discord, msg) {
-    const usersCollection = db.collection('users');
-    const user = await usersCollection.findOne({discordId:msg.author.id});
-    if (!user) {
-      msg.author.send("Looks like you haven't joined the game yet.  Type **!joinGame** in a public channel to join the game.");
-      return;
-    }
-
-    let m = '';
-    m += '__Build your army.__\n';
-    m += 'Recruit warriors with **!recruit <name>**.  Retire warriors with **!retire <name>**.  You can only recruit a warrior if there is one available.  Every day one more becomes available.  You can have ' + _s.maxWarriors + ' warriors max.\n';
-    m += '\n';
-    m += '__Challenge players in the arena.__\n';
-    m += "Use **!battle <warrior name> -vs <other warrior name>** to send your warriors off to battle in the arena and win gems.  If your warrior beats a warrior ranked higher than them they will win more than beating one ranked lower.\n";
-    m += '\n';
-    m += '__Attack other Discord guilds.__\n';
-    m += "Use **!attack <warrior name> -vs <guild name>** to send your warrior to attack another Discord guild and bring back any loot they find.  The more warriors your guild sends the higher the chance that they will be successful.\n"
-    m += '\n';
-    m += '**Strength** - How much health your warrior has.\n';
-    m += '**Dexterity** - How much damage your warrior does.\n';
-    m += '**Agility** - Chance that your warrior will block.\n';
-    m += '\n';
-    m += 'There are **' + user.recruitsAvailable + '** warriors available for you to recruit.\n';
-    m += '\n';
-    m += 'Type **!commands** to see available commands.\n';
-    msg.author.send(m);
-  },
 
 
   serverTime: function(db, discord, msg) {

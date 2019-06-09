@@ -1,153 +1,245 @@
-import text from './text.js';
 import dm from './dm.js';
-import shared from './shared.js';
 import dateFns from 'date-fns';
 import events from './events.js';
 import attacks from './attacks.js';
-import recruit from './commands/recruit.js';
-import rip from './commands/rip.js';
-import retire from './commands/retire.js';
+import recruit from './commands/dm/recruit.js';
+import rip from './commands/text/rip.js';
+import retire from './commands/dm/retire.js';
+import guilds from './commands/shared/guilds.js';
+import commandsText from './commands/text/commands.js';
+import commandsDm from './commands/dm/commands.js';
+import helpText from './commands/text/help.js';
+import helpDm from './commands/dm/help.js';
+import setResultChannel from './commands/text/setResultChannel.js';
+import joinGame from './commands/text/joinGame.js';
+import warriorsText from './commands/text/warriors.js';
+import playersText from './commands/text/players.js';
+
 
 const commands = {
   help: function(db, discord, msg) {
-    if (msg.channel.type == 'text') {
-      text.help(db, discord, msg);
-    } else if (msg.channel.type == 'dm') {
-      dm.help(db, discord, msg);
+    try {
+      if (msg.channel.type == 'text') {
+        helpText(db, discord, msg);
+      } else if (msg.channel.type == 'dm') {
+        helpDm(db, discord, msg);
+      }
+    } catch (error) {
+      console.log(error);
     }
   },
 
 
   commands: function(db, discord, msg) {
-    if (msg.channel.type == 'text') {
-      text.commands(db, discord, msg);
-    } else if (msg.channel.type == 'dm') {
-      dm.commands(db, discord, msg);
+    try {
+      if (msg.channel.type == 'text') {
+        commandsText(db, discord, msg);
+      } else if (msg.channel.type == 'dm') {
+        commandsDm(db, discord, msg);
+      }
+    } catch (error) {
+      console.log(error);
     }
   },
 
 
   setResultChannel: function(db, discord, msg) {
     if (msg.channel.type == 'text') {
-      text.setResultChannel(db, discord, msg);
+      try {
+        setResultChannel(db, discord, msg);
+      } catch (error) {
+        console.log(error);
+      }
     }
   },
 
 
   joinGame: function(db, discord, msg) {
     if (msg.channel.type == 'text') {
-      text.joinGame(db, discord, msg);
+      try {
+        joinGame(db, discord, msg);
+      } catch (error) {
+        console.log(error);
+      }
     }
   },
 
 
   recruit: function(db, discord, msg) {
     if (msg.channel.type == 'dm') {
-      recruit(db, discord, msg);
+      try {
+        recruit(db, discord, msg);
+      } catch (error) {
+        console.log(error);
+      }
     }
   },
 
 
   retire: function(db, discord, msg) {
     if (msg.channel.type == 'dm') {
-      retire(db, discord, msg);
+      try {
+        retire(db, discord, msg);
+      } catch (error) {
+        console.log(error);
+      }
     }
   },
 
 
   warriors: function(db, discord, msg) {
-    if (msg.channel.type == 'dm') {
-      dm.warriors(db, discord, msg);
-    } else if (msg.channel.type == 'text') {
-      text.warriors(db, discord, msg);
+    try {
+      if (msg.channel.type == 'dm') {
+        dm.warriors(db, discord, msg);
+      } else if (msg.channel.type == 'text') {
+        warriorsText(db, discord, msg);
+      }
+    } catch (error) {
+      console.log(error);
     }
   },
 
 
   guildWarriors: function(db, discord, msg) {
     if (msg.channel.type == 'dm') {
-      dm.guildWarriors(db, discord, msg);
+      try {
+        dm.guildWarriors(db, discord, msg);
+      } catch (error) {
+        console.log(error);
+      }
     }
   },
 
 
   players: function(db, discord, msg) {
-    if (msg.channel.type == 'dm') {
-      dm.players(db, discord, msg);
-    } else {
-      text.players(db, discord, msg);
+    try {
+      if (msg.channel.type == 'dm') {
+        dm.players(db, discord, msg);
+      } else {
+        playersText(db, discord, msg);
+      }
+    } catch (error) {
+      console.log(error);
     }
   },
 
 
   guilds: function(db, discord, msg) {
-    shared.guilds(db, discord, msg);
+    try {
+      guilds(db, discord, msg);
+    } catch (error) {
+      console.log(error);
+    }
   },
 
 
   battle: function(db, discord, msg) {
     if (msg.channel.type == 'dm') {
-      dm.battle(db, discord, msg);
+      try {
+        dm.battle(db, discord, msg);
+      } catch (error) {
+        console.log(error);
+      }
     }
   },
 
 
   battles: function(db, discord, msg) {
-    shared.battles(db, discord, msg);
+    try {
+      shared.battles(db, discord, msg);
+    } catch (error) {
+      console.log(error);
+    }
   },
 
 
   serverTime: function(db, discord, msg) {
     if (msg.channel.type == 'dm') {
-      dm.serverTime(db, discord, msg);
+      try {
+        dm.serverTime(db, discord, msg);
+      } catch (error) {
+        console.log(error);
+      }
     }
   },
 
 
   leaveGame: function(db, discord, msg) {
     if (msg.channel.type == 'dm') {
-      dm.leaveGame(db, discord, msg);
+      try {
+        dm.leaveGame(db, discord, msg);
+      } catch (error) {
+        console.log(error);
+      }
     }
   },
 
 
   predict: function(db, discord, msg) {
     if (msg.channel.type == 'dm') {
-      dm.predict(db, discord, msg);
+      try {
+        dm.predict(db, discord, msg);
+      } catch (error) {
+        console.log(error);
+      }
     }
   },
 
   buyRecruit: function(db, discord, msg) {
     if (msg.channel.type == 'dm') {
-      dm.buyRecruit(db, discord, msg);
+      try {
+        dm.buyRecruit(db, discord, msg);
+      } catch (error) {
+        console.log(error);
+      }
     }
   },
 
   battleResults: function(db, discord, msg) {
     if (msg.channel.type == 'dm') {
-      dm.battleResults(db, discord, msg);
+      try {
+        dm.battleResults(db, discord, msg);
+      } catch (error) {
+        console.log(error);
+      }
     }
   },
 
   attack: function(db, discord, msg) {
     if (msg.channel.type == 'dm') {
-      attacks.attack(db, discord, msg);
+      try {
+        attacks.attack(db, discord, msg);
+      } catch (error) {
+        console.log(error);
+      }
     }
   },
 
   defend: function(db, discord, msg) {
     if (msg.channel.type == 'dm') {
-      attacks.defend(db, discord, msg);
+      try {
+        attacks.defend(db, discord, msg);
+      } catch (error) {
+        console.log(error);
+      }
     }
   },
 
   attacks: function(db, discord, msg) {
-    attacks.attacks(db, discord, msg);
+    try {
+      attacks.attacks(db, discord, msg);
+    } catch (error) {
+      console.log(error);
+    }
   },
 
   rip: function(db, discord, msg) {
     if (msg.channel.type == 'text') {
-      rip(db, discord, msg);
+      try {
+        rip(db, discord, msg);
+      } catch (error) {
+        console.log(error);
+      }
     }
   }
 }

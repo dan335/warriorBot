@@ -1,7 +1,7 @@
 const Filter = require('bad-words')
 const filter = new Filter();
-import _s from '../settings.js';
-import functions from '../functions.js';
+import _s from '../../settings.js';
+import functions from '../../functions.js';
 
 
 export default async function recruit(db, discord, msg) {
