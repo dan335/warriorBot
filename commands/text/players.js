@@ -2,7 +2,7 @@ import _s from '../../settings.js';
 import functions from '../../functions.js';
 
 
-export default function players(db, discord, msg) {
+export default async function players(db, discord, msg) {
   const usersCollection = db.collection('users');
 
   let page = Number(msg.content.replace('!players', '').trim());

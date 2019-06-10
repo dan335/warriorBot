@@ -14,6 +14,7 @@ import setResultChannel from './commands/text/setResultChannel.js';
 import joinGame from './commands/text/joinGame.js';
 import warriorsText from './commands/text/warriors.js';
 import playersText from './commands/text/players.js';
+import serverTime from './commands/dm/serverTime.js';
 
 
 const commands = {
@@ -156,7 +157,7 @@ const commands = {
   serverTime: function(db, discord, msg) {
     if (msg.channel.type == 'dm') {
       try {
-        dm.serverTime(db, discord, msg);
+        serverTime(db, discord, msg);
       } catch (error) {
         console.log(error);
       }

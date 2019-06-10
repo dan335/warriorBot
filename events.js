@@ -14,12 +14,13 @@ const events = {
     const warriorsCollection = db.collection('warriors');
 
     // kill warriors
-    const cursor = warriorsCollection.find({}, {projection:{age:1}});
+    const cursor = warriorsCollection.find({});
     cursor.toArray((error, warriors) => {
       if (!error) {
+        warriors.length = 1;
         warriors.forEach(warrior => {
           const chance = (warrior.age - _s.startAge) / (_s.maxAge - _s.startAge);
-          if (Math.random() <= chance) {
+          if (Math.random() <= 111) {
             functions.killWarrior(db, discord, warrior, 'died of old age.');
           }
         })

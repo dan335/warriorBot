@@ -9,13 +9,6 @@ import functions from './functions.js';
 
 const dm = {
 
-
-  serverTime: function(db, discord, msg) {
-    msg.author.send(new Date().toLocaleString());
-  },
-
-
-
   guildWarriors: async function(db, discord, msg) {
     const usersCollection = db.collection('users');
     const warriorsCollection = db.collection('warriors');

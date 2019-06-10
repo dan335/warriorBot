@@ -73,7 +73,10 @@ const functions = {
             return;
           }
 
-          discord.channels.get(guild.channelId).send('**'+warrior.name+'** '+cause);
+          const channel = discord.channels.get(guild.channelId);
+          if (channel) {
+            channel.send('**'+warrior.name+'** '+cause);
+          }
           resolve();
         })
       })
