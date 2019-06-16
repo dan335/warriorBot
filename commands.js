@@ -1,11 +1,9 @@
 import dm from './dm.js';
 import dateFns from 'date-fns';
 import events from './events.js';
-import attacks from './attacks.js';
 import recruit from './commands/dm/recruit.js';
 import rip from './commands/text/rip.js';
 import retire from './commands/dm/retire.js';
-import guilds from './commands/shared/guilds.js';
 import commandsText from './commands/text/commands.js';
 import commandsDm from './commands/dm/commands.js';
 import helpText from './commands/text/help.js';
@@ -125,15 +123,6 @@ const commands = {
   },
 
 
-  guilds: function(db, discord, msg) {
-    try {
-      guilds(db, discord, msg);
-    } catch (error) {
-      console.log(error);
-    }
-  },
-
-
   battle: function(db, discord, msg) {
     if (msg.channel.type == 'dm') {
       try {
@@ -203,34 +192,6 @@ const commands = {
       } catch (error) {
         console.log(error);
       }
-    }
-  },
-
-  attack: function(db, discord, msg) {
-    if (msg.channel.type == 'dm') {
-      try {
-        attacks.attack(db, discord, msg);
-      } catch (error) {
-        console.log(error);
-      }
-    }
-  },
-
-  defend: function(db, discord, msg) {
-    if (msg.channel.type == 'dm') {
-      try {
-        attacks.defend(db, discord, msg);
-      } catch (error) {
-        console.log(error);
-      }
-    }
-  },
-
-  attacks: function(db, discord, msg) {
-    try {
-      attacks.attacks(db, discord, msg);
-    } catch (error) {
-      console.log(error);
     }
   },
 
