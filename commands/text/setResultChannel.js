@@ -1,6 +1,7 @@
 export default function setResultChannel(db, discord, msg) {
+
   // make sure author is owner
-  if (msg.author.id != msg.guild.ownerId) {
+  if (msg.author.id != msg.guild.ownerID) {
     msg.reply('setResultChannel command can only be used by guild owner.');
     return;
   }
