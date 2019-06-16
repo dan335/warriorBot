@@ -63,7 +63,7 @@ export default class Battle {
 
     // deaths
     if (!this.warrior1.isWinner && this.warrior1.health <= 0) {
-      if (Math.random() <= 0.05) {
+      if (Math.random() <= 0.03) {
         this.warrior1.died = true;
       }
     }
