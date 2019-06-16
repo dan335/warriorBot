@@ -31,18 +31,18 @@ const functions = {
       const usersCollection = db.collection('users');
       const guildsCollection = db.collection('guilds');
 
-      let ripData = Object.assign({}, warrior);
+      let ripData = Object.assign({cause:cause}, warrior);
       delete ripData._id;
 
       ripsCollection.insertOne(ripData, {}, (error, result) => {
 
         warriorsCollection.deleteOne({_id:warrior._id});
 
-        // delete if more than 10
+        // delete if more than 15
         const cursor = ripsCollection.find({}, {sort:{points:-1, gemsWon:-1}, projection:{_id:1}});
         cursor.toArray((error, rips) => {
           for (let n = 0; n < rips.length; n++) {
-            if (n > 9) {
+            if (n > 14) {
               ripsCollection.deleteOne({_id:rips[n]._id});
             }
           }

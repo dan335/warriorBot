@@ -7,7 +7,7 @@ const _s = {
   buyRecruitCost: 1000,
   attackCost: 6,
   attackDuration: 1000 * 60 * 60,
-  maxAge: 100,
+  maxAge: 120,
   startAge: 18
 }
 
