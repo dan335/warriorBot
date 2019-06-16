@@ -15,6 +15,7 @@ export default function rip(db, discord, msg) {
           m += '   gems:**'+Math.round(rips[n].gemsWon)+'**';
           m += '   points:**'+Math.round(rips[n].points)+'**';
           m += '    '+rips[n].nickname;
+          m += '    '+rips[n].cause;
           m += '\n';
         }
       } else {
