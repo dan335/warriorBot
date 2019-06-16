@@ -13,6 +13,8 @@ import joinGame from './commands/text/joinGame.js';
 import warriorsText from './commands/text/warriors.js';
 import playersText from './commands/text/players.js';
 import serverTime from './commands/dm/serverTime.js';
+import attacks from './attacks.js';
+import guilds from './commands/shared/guilds.js';
 
 
 const commands = {
@@ -49,6 +51,43 @@ const commands = {
       } catch (error) {
         console.log(error);
       }
+    }
+  },
+
+  attack: function(db, discord, msg) {
+    if (msg.channel.type == 'dm') {
+      try {
+        attacks.attack(db, discord, msg);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  },
+
+  defend: function(db, discord, msg) {
+    if (msg.channel.type == 'dm') {
+      try {
+        attacks.defend(db, discord, msg);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  },
+
+  attacks: function(db, discord, msg) {
+    try {
+      attacks.attacks(db, discord, msg);
+    } catch (error) {
+      console.log(error);
+    }
+  },
+
+
+  guilds: function(db, discord, msg) {
+    try {
+      guilds(db, discord, msg);
+    } catch (error) {
+      console.log(error);
     }
   },
 

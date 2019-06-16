@@ -13,6 +13,11 @@ export default function commands(db, discord, msg) {
   m += "**!battleResults <warrior name>** - View a warriors last 3 battles.\n";
   m += "**!predict <warrior name> -vs <warrior name>** - Predict who will win.\n";
   m += '\n';
+  m += "**!guilds <page number>** - View Discord guilds.  Page number is optional.\n";
+  m += "**!attack <warrior name> -vs <guild name> -m <message>** - Send a warrior to attack another guild and bring back loot.  Message is optional.\n";
+  m += "**!defend <warrior name> -vs <guild name> -m <message>** - Defend against an attack.  Message is optional.\n";
+  m += '**!attacks** - View attacks.\n';
+  m += '\n';
   m += '**!help**\n';
   m += '**!serverTime**\n';
   m += "**!leaveGame** - Leave this guild's game.  This will delete your warriors and all your data.\n";

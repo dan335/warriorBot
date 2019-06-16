@@ -16,6 +16,9 @@ export default async function help(db, discord, msg) {
   m += '__Challenge players in the arena.__\n';
   m += "Use **!battle <warrior name> -vs <other warrior name>** to send your warriors off to battle in the arena and win gems.  If your warrior beats a warrior ranked higher than them they will win more than beating one ranked lower.\n";
   m += '\n';
+  m += '__Attack other Discord guilds.__\n';
+  m += "Use **!attack <warrior name> -vs <guild name>** to send your warrior to attack another Discord guild and bring back any loot they find.  The more warriors your guild sends the higher the chance that they will be successful.\n"
+  m += '\n';
   m += '**Strength** - How much health your warrior has.\n';
   m += '**Dexterity** - How much damage your warrior does.\n';
   m += '**Agility** - Chance that your warrior will block.\n';
