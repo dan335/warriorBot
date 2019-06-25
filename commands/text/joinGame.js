@@ -11,16 +11,8 @@ export default async function joinGame(db, discord, msg) {
     }
   }
 
-  // get guild id
-  const guild = await guildsCollection.findOne({discordId:msg.guild.id});
-  if (!guild) {
-    console.error('Could not find guild.  This should not happen.');
-    msg.reply('Could not get your guild from the db.  Weird.  Try again soon.');
-    return;
-  }
-
   // save guild to db
-  guildsCollection.updateOne({discordId:msg.guild.id}, {
+  guildsCollection.findOneAndUpdate({discordId:msg.guild.id}, {
     $setOnInsert: {
       discordId: msg.guild.id,
       channelId: msg.channel.id,
@@ -30,11 +22,18 @@ export default async function joinGame(db, discord, msg) {
     $set: {
       updatedAt: new Date()
     }
-  }, {upsert:true}, (error, result) => {
+  }, {upsert:true, returnOriginal:false}, (error, result) => {
     if (error) {
-      console.log('Error in join:updateOne');
+      console.log('Error in join:findOneAndUpdate');
       console.log(error);
     } else {
+      const guild = result.value;
+
+      if (!guild) {
+        console.error('Could not find guild.  This should not happen.');
+        msg.reply('Could not get your guild from the db.  Weird.  Try again soon.');
+        return;
+      }
 
       // upsert user
       usersCollection.updateOne({discordId:msg.author.id}, {

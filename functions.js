@@ -39,7 +39,7 @@ const functions = {
         warriorsCollection.deleteOne({_id:warrior._id});
 
         // delete if more than 15
-        const cursor = ripsCollection.find({discordId:warrior.guildDiscordId}, {sort:{points:-1, gemsWon:-1}, projection:{_id:1}});
+        const cursor = ripsCollection.find({guildDiscordId:warrior.guildDiscordId}, {sort:{points:-1, gemsWon:-1}, projection:{_id:1}});
         cursor.toArray((error, rips) => {
           for (let n = 0; n < rips.length; n++) {
             if (n > 14) {
