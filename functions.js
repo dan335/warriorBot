@@ -1,4 +1,11 @@
 const functions = {
+  sendToChannel(discord, channelId, msg) {
+    const channel = discord.channels.get(channelId);
+    if (channel) {
+      channel.send(msg);
+    }
+  },
+
   escapeMarkdown: function(str) {
     var unescaped = str.replace(/\\(\*|_|`|~|\\)/g, '$1'); // unescape any "backslashed" character
     var escaped = unescaped.replace(/(\*|_|`|~|\\)/g, '\\$1'); // escape *, _, `, ~, \

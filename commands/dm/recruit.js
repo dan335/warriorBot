@@ -116,7 +116,7 @@ export default async function recruit(db, discord, msg) {
 
                   let tm = '**'+functions.escapeMarkdown(user.nickname)+'** recruited **'+name+'**.  '+Math.round(warrior.strength*100)+'/'+Math.round(warrior.dexterity*100)+'/'+Math.round(warrior.agility*100);
 
-                  discord.channels.get(guild.channelId).send(tm);
+                  functions.sendToChannel(discord, guild.channelId, tm);
                 }
               });
 

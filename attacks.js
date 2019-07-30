@@ -126,9 +126,9 @@ const attacks = {
 
         msg.author.send('**'+warrior.name+"** has joined your guild's defense against an attack from **"+functions.escapeMarkdown(attack.attackingGuild.name)+"**.  You rolled a **"+Math.round(roll*100)+"** and your guild now has an defense power of **"+Math.round(defenseMax*100)+"**.  They have **"+Math.round(attackMax*100)+"**.  You have **"+minutes+"** minutes left to defend.");
 
-        discord.channels.get(attack.defendingGuild.channelId).send('**'+warrior.name+'** has joined the defense against an attack from  **'+functions.escapeMarkdown(attack.attackingGuild.name)+'**.  They rolled a **'+Math.round(roll*100)+'** and your defense now has a power of **'+Math.round(defenseMax*100)+'**.  They have **'+Math.round(attackMax*100)+'**.  You have **'+minutes+'** minutes left to defend.');
+        functions.sendToChannel(discord, attack.defendingGuild.channelId, '**'+warrior.name+'** has joined the defense against an attack from  **'+functions.escapeMarkdown(attack.attackingGuild.name)+'**.  They rolled a **'+Math.round(roll*100)+'** and your defense now has a power of **'+Math.round(defenseMax*100)+'**.  They have **'+Math.round(attackMax*100)+'**.  You have **'+minutes+'** minutes left to defend.');
 
-        discord.channels.get(attack.attackingGuild.channelId).send("**"+warrior.name+"** has joined **"+functions.escapeMarkdown(attack.defendingGuild.name)+"**'s defense and rolled a **"+Math.round(roll*100)+"**.  Their defense is now **"+Math.round(defenseMax*100)+"**.  You have **"+Math.round(attackMax*100)+"**.  You have **"+minutes+"** minutes left to attack.")
+        functions.sendToChannel(discord, attack.attackingGuild.channelId, "**"+warrior.name+"** has joined **"+functions.escapeMarkdown(attack.defendingGuild.name)+"**'s defense and rolled a **"+Math.round(roll*100)+"**.  Their defense is now **"+Math.round(defenseMax*100)+"**.  You have **"+Math.round(attackMax*100)+"**.  You have **"+minutes+"** minutes left to attack.")
       }
     });
   },
@@ -274,9 +274,9 @@ const attacks = {
 
           msg.author.send('**'+warrior.name+'** has joined an attack on **'+defendingGuild.name+'**.  You rolled a **'+Math.round(roll*100)+'** and your guild now has an attack power of **'+Math.round(attackMax*100)+'**.  They have **'+defendMax+'**.  You have **'+minutes+'** minutes left to attack.');
 
-          discord.channels.get(attackingGuild.channelId).send('**'+warrior.name+'** has joined the attack on **'+defendingGuild.name+'**.  They rolled a **'+Math.round(roll*100)+'** and your attack now has **'+Math.round(attackMax*100)+'** power.  They have **'+defendMax+'**.  You have **'+minutes+'** minutes left to attack.');
+          functions.sendToChannel(discord, attackingGuild.channelId, '**'+warrior.name+'** has joined the attack on **'+defendingGuild.name+'**.  They rolled a **'+Math.round(roll*100)+'** and your attack now has **'+Math.round(attackMax*100)+'** power.  They have **'+defendMax+'**.  You have **'+minutes+'** minutes left to attack.');
 
-          discord.channels.get(defendingGuild.channelId).send('**'+warrior.name+'** has joined the attack from **'+attackingGuild.name+'**.  They rolled a **'+Math.round(roll*100)+'** and their attack now has **'+Math.round(attackMax*100)+'** power.  You have **'+defendMax+'**.  You have **'+minutes+'** minutes left to defend.');
+          functions.sendToChannel(discord, defendingGuild.channelId, '**'+warrior.name+'** has joined the attack from **'+attackingGuild.name+'**.  They rolled a **'+Math.round(roll*100)+'** and their attack now has **'+Math.round(attackMax*100)+'** power.  You have **'+defendMax+'**.  You have **'+minutes+'** minutes left to defend.');
         }
       })
 
@@ -323,10 +323,10 @@ const attacks = {
 
           msg.author.send('**'+warrior.name+'** has started an attack on **'+defendingGuild.name+'** with a power of **'+Math.round(roll*100)+'**.  Members of your guild have '+dateFns.format(dateFns.addMilliseconds(new Date(0), _s.attackDuration), 'm')+' minutes to join you in the fight.');
 
-          discord.channels.get(attackingGuild.channelId).send('__**Attack Started**__\n**'+warrior.name+'** has started an attack on **'+defendingGuild.name+'** with a power of **'+Math.round(roll*100)+'**.  You have '+dateFns.format(dateFns.addMilliseconds(new Date(0), _s.attackDuration), 'm')+' minutes to join in and try to increase the attack power.  Use **!attack <warrior name> -vs '+defendingGuild.name+'** to join the attack.');
+          functions.sendToChannel(discord, attackingGuild.channelId, '__**Attack Started**__\n**'+warrior.name+'** has started an attack on **'+defendingGuild.name+'** with a power of **'+Math.round(roll*100)+'**.  You have '+dateFns.format(dateFns.addMilliseconds(new Date(0), _s.attackDuration), 'm')+' minutes to join in and try to increase the attack power.  Use **!attack <warrior name> -vs '+defendingGuild.name+'** to join the attack.');
 
           let dm = '__**Incoming Attack**__\nAttack from **'+functions.escapeMarkdown(attackingGuild.name)+'** spotted with power of **'+Math.round(roll*100)+'**.  Your guild has '+dateFns.format(dateFns.addMilliseconds(new Date(0), _s.attackDuration), 'm')+' minutes to form a defense.  Use **!defend <warrior name> -vs '+functions.escapeMarkdown(attackingGuild.name)+' -m <message>** to join.';
-          discord.channels.get(defendingGuild.channelId).send(dm);
+          functions.sendToChannel(discord, defendingGuild.channelId, dm);
         }
       })
     }

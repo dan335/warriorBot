@@ -177,7 +177,7 @@ export default class Battle {
 
       } else {
         if (guild) {
-          this.discord.channels.get(guild.channelId).send(':crossed_swords: '+this.shortDescription);
+          functions.sendToChannel(this.discord, guild.channelId, ':crossed_swords: '+this.shortDescription);
         }
       }
     });
