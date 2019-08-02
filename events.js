@@ -112,25 +112,25 @@ const events = {
                 // print results
                 let am = '__**'+functions.escapeMarkdown(attack.defendingGuild.name)+'  was Defeated**__\nAttack on **'+functions.escapeMarkdown(attack.defendingGuild.name)+'** was successful.  Your attack for **'+Math.round(attackMax*100)+'** beat their defense of **'+Math.round(defenseMax*100)+'** and stole **'+Math.round(stolenGems)+' gems**.';
 
-                functions.sendToChannel(discord, attack.attackingGuild.channelid, am);
+                functions.sendToChannel(discord, attack.attackingGuild.channelId, am);
 
                 let defm = '__**Your Guild Lost**__\nAttack from **'+functions.escapeMarkdown(attack.attackingGuild.name)+'** was successful.  Their attack power of **'+Math.round(attackMax*100)+'** beat your defense of **'+Math.round(defenseMax*100)+'**.  They stole **'+Math.round(stolenGems)+' gems**.';
 
-                functions.sendToChannel(discord, attack.defendingGuild.channelid, defm);
+                functions.sendToChannel(discord, attack.defendingGuild.channelId, defm);
 
                 // send attacking warrior list
                 let aw = '**Attacking Warriors**\n';
                 aw += printWarriors(attack.attackingWarriors);
 
-                functions.sendToChannel(discord, attack.attackingGuild.channelid, aw);
-                functions.sendToChannel(discord, attack.defendingGuild.channelid, aw);
+                functions.sendToChannel(discord, attack.attackingGuild.channelId, aw);
+                functions.sendToChannel(discord, attack.defendingGuild.channelId, aw);
 
                 // send defending warrior list
                 let dw = '**Defending Warriors**\n';
                 dw += printWarriors(attack.defendingWarriors);
 
-                functions.sendToChannel(discord, attack.attackingGuild.channelid, dw);
-                functions.sendToChannel(discord, attack.defendingGuild.channelid, dw);
+                functions.sendToChannel(discord, attack.attackingGuild.channelId, dw);
+                functions.sendToChannel(discord, attack.defendingGuild.channelId, dw);
               }
             })
 
@@ -139,25 +139,25 @@ const events = {
             // unsuccessful attack
             let am = '__**Attack Unuccessful**__\nAttack on **'+functions.escapeMarkdown(attack.defendingGuild.name)+'** was unsuccessful.  Your attack for **'+Math.round(attackMax*100)+'** was beat by their defense of **'+Math.round(defenseMax*100)+'**.';
 
-            functions.sendToChannel(discord, attack.attackingGuild.channelid, am);
+            functions.sendToChannel(discord, attack.attackingGuild.channelId, am);
 
             let dm = '__**Your Guild Won**__\nAttack from **'+functions.escapeMarkdown(attack.attackingGuild.name)+'** was unsuccessful.  Their attack power of **'+Math.round(attackMax*100)+'** was beat by your defense of **'+Math.round(defenseMax*100)+'**.';
 
-            functions.sendToChannel(discord, attack.defendingGuild.channelid, dm);
+            functions.sendToChannel(discord, attack.defendingGuild.channelId, dm);
 
             // send attacking warrior list
             let aw = '**Attacking Warriors**\n';
             aw += printWarriors(attack.attackingWarriors);
 
-            functions.sendToChannel(discord, attack.attackingGuild.channelid, aw);
-            functions.sendToChannel(discord, attack.defendingGuild.channelid, aw);
+            functions.sendToChannel(discord, attack.attackingGuild.channelId, aw);
+            functions.sendToChannel(discord, attack.defendingGuild.channelId, aw);
 
             // send defending warrior list
             let dw = '**Defending Warriors**\n';
             dw += printWarriors(attack.defendingWarriors);
 
-            functions.sendToChannel(discord, attack.attackingGuild.channelid, dw);
-            functions.sendToChannel(discord, attack.defendingGuild.channelid, dw);
+            functions.sendToChannel(discord, attack.attackingGuild.channelId, dw);
+            functions.sendToChannel(discord, attack.defendingGuild.channelId, dw);
           }
         })
       }
