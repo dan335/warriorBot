@@ -66,6 +66,11 @@ const attacks = {
       return;
     }
 
+    if (warrior.discordId != user.discordId) {
+      msg.author.send('You do not control **'+warrior.name+'**.  Choose one of your warriors for the first name.');
+      return;
+    }
+
     if (warrior.energy < _s.attackCost) {
       msg.author.send(warrior.name+' is too tired.  Defending uses '+_s.attackCost+' energy.');
       return;
@@ -192,6 +197,11 @@ const attacks = {
 
     if (!warrior) {
       msg.author.send('Could not find a warrior named **'+warriorName+'**.');
+      return;
+    }
+
+    if (warrior.discordId != user.discordId) {
+      msg.author.send('You do not control **'+warrior.name+'**.  Choose one of your warriors for the first name.');
       return;
     }
 

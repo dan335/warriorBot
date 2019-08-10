@@ -18,9 +18,11 @@ const events = {
     cursor.toArray((error, warriors) => {
       if (!error) {
         warriors.forEach(warrior => {
-          const chance = (warrior.age - _s.startAge) / (_s.maxAge - _s.startAge);
-          if (Math.random() <= chance) {
-            functions.killWarrior(db, discord, warrior, 'died of old age.');
+          if (warrior.age >= _s.minAgeToDie) {
+            const chance = (warrior.age - _s.minAgeToDie) / (_s.maxAge - _s.minAgeToDie);
+            if (Math.random() <= chance) {
+              functions.killWarrior(db, discord, warrior, 'died of old age.');
+            }
           }
         })
       }
