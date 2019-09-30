@@ -9,7 +9,8 @@ const _s = {
   attackDuration: 1000 * 60 * 60,
   maxAge: 120,
   minAgeToDie: 40,
-  startAge: 18
+  startAge: 18,
+  numHourlyFights: 5
 }
 
 

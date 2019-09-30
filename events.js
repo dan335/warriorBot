@@ -44,20 +44,27 @@ const events = {
     const guilds = await guildsCursor.toArray();
 
     for (let g = 0; g < guilds.length; g++) {
-      const warriorCursor = await warriorsCollection.aggregate([
-        { $match: { guildDiscordId: guilds[g].discordId }},
-        { $sample: { size:2 }}
-      ]);
+      for (let n = 0; n < _s.numHourlyFights; n++) {
 
-      const warriors = await warriorCursor.toArray();
+        const warriorCursor = await warriorsCollection.aggregate([
+          { $match: { guildDiscordId: guilds[g].discordId }},
+          { $sample: { size:2 }}
+        ]);
 
-      if (warriors && warriors.length == 2) {
-        const user1 = await usersCollection.findOne({_id:warriors[0].userId});
-        const user2 = await usersCollection.findOne({_id:warriors[1].userId});
+        const warriors = await warriorCursor.toArray();
 
-        if (user1 && user2) {
-          new Battle(db, discord, null, warriors[0], warriors[1], user1, user2);
+        if (warriors && warriors.length == 2) {
+          if (warriors[0]._id != warriors[1]._id) {
+
+            const user1 = await usersCollection.findOne({_id:warriors[0].userId});
+            const user2 = await usersCollection.findOne({_id:warriors[1].userId});
+
+            if (user1 && user2) {
+              new Battle(db, discord, null, warriors[0], warriors[1], user1, user2);
+            }
+          }
         }
+
       }
     }
   },
