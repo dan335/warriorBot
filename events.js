@@ -33,8 +33,33 @@ const events = {
   },
 
 
-  hourly: function(db, discord) {
+  hourly: async function(db, discord) {
+    // auto-fight
+    const guildsCollection = db.collection('guilds');
+    const warriorsCollection = db.collection('warriors');
+    const usersCollection = db.collection('users');
 
+    const guildsCursor = guildsCollection.find({});
+
+    const guilds = await guildsCursor.toArray();
+
+    for (let g = 0; g < guilds.length; g++) {
+      const warriorCursor = await warriorsCollection.aggregate([
+        { $match: { guildDiscordId: guilds[g].discordId }},
+        { $sample: { size:2 }}
+      ]);
+
+      const warriors = await warriorCursor.toArray();
+
+      if (warriors && warriors.length == 2) {
+        const user1 = await usersCollection.findOne({_id:warriors[0].userId});
+        const user2 = await usersCollection.findOne({_id:warriors[1].userId});
+
+        if (user1 && user2) {
+          new Battle(db, discord, null, warriors[0], warriors[1], user1, user2);
+        }
+      }
+    }
   },
 
 

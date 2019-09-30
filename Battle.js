@@ -169,7 +169,9 @@ export default class Battle {
 
 
   printToDiscord() {
-    this.msg.author.send(this.description + this.warrior1.name+' has **'+(this.warrior1.energy-1)+'** energy left.');
+    if (this.msg) {
+      this.msg.author.send(this.description + this.warrior1.name+' has **'+(this.warrior1.energy-1)+'** energy left.');
+    }
 
     const guildsCollection = this.db.collection('guilds');
     guildsCollection.findOne({discordId:this.user1.guildDiscordId}, {}, (error, guild) => {
