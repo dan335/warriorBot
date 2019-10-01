@@ -9,7 +9,7 @@ const events = {
   nightly: function(db, discord) {
     // give everyone 1 recruit
     const usersCollection = db.collection('users');
-    usersCollection.updateMany({}, {$inc:{recruitsAvailable:1}});
+    usersCollection.updateMany({maxRecruitsAvailable: {$lt: _s.maxRecruitsAvailable}}, {$inc:{recruitsAvailable:1}});
 
     const warriorsCollection = db.collection('warriors');
 
@@ -30,43 +30,12 @@ const events = {
 
     // age warriors
     warriorsCollection.updateMany({}, {$inc:{age:1}});
+
+    functions.autoFight(db, discord);
   },
 
 
   hourly: async function(db, discord) {
-    // auto-fight
-    const guildsCollection = db.collection('guilds');
-    const warriorsCollection = db.collection('warriors');
-    const usersCollection = db.collection('users');
-
-    const guildsCursor = guildsCollection.find({});
-
-    const guilds = await guildsCursor.toArray();
-
-    for (let g = 0; g < guilds.length; g++) {
-      for (let n = 0; n < _s.numHourlyFights; n++) {
-
-        const warriorCursor = await warriorsCollection.aggregate([
-          { $match: { guildDiscordId: guilds[g].discordId }},
-          { $sample: { size:2 }}
-        ]);
-
-        const warriors = await warriorCursor.toArray();
-
-        if (warriors && warriors.length == 2) {
-          if (warriors[0]._id != warriors[1]._id) {
-
-            const user1 = await usersCollection.findOne({_id:warriors[0].userId});
-            const user2 = await usersCollection.findOne({_id:warriors[1].userId});
-
-            if (user1 && user2) {
-              new Battle(db, discord, null, warriors[0], warriors[1], user1, user2);
-            }
-          }
-        }
-
-      }
-    }
   },
 
 
