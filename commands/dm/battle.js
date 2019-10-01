@@ -1,4 +1,4 @@
-import Battle from './Battle.js';
+import Battle from '../../Battle.js';
 
 
 export default async function battle(db, discord, msg) {
