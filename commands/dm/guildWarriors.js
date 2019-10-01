@@ -1,4 +1,5 @@
 import _s from '../../settings.js';
+import functions from '../../functions.js';
 
 
 export default async function guildWarriors(db, discord, msg) {
