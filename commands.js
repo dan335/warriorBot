@@ -1,4 +1,3 @@
-import dm from './dm.js';
 import dateFns from 'date-fns';
 import events from './events.js';
 import recruit from './commands/dm/recruit.js';
@@ -11,10 +10,17 @@ import helpDm from './commands/dm/help.js';
 import setResultChannel from './commands/text/setResultChannel.js';
 import joinGame from './commands/text/joinGame.js';
 import warriorsText from './commands/text/warriors.js';
+import warriorsDm from './commands/dm/warriors.js';
 import playersText from './commands/text/players.js';
 import serverTime from './commands/dm/serverTime.js';
 import attacks from './attacks.js';
 import guilds from './commands/shared/guilds.js';
+import dbGuildWarriors from './commands/dm/guildWarriors.js';
+import leaveGame from './commands/dm/leaveGame.js';
+import predict from './commands/dm/predict.js';
+import battle from './commands/dm/battle.js';
+import buyRecruit from './commands/dm/buyRecruit.js';
+import battleResults from './commands/dm/battleResults.js';
 
 
 const commands = {
@@ -128,7 +134,7 @@ const commands = {
   warriors: function(db, discord, msg) {
     try {
       if (msg.channel.type == 'dm') {
-        dm.warriors(db, discord, msg);
+        warriorsDm(db, discord, msg);
       } else if (msg.channel.type == 'text') {
         warriorsText(db, discord, msg);
       }
@@ -141,7 +147,7 @@ const commands = {
   guildWarriors: function(db, discord, msg) {
     if (msg.channel.type == 'dm') {
       try {
-        dm.guildWarriors(db, discord, msg);
+        dbGuildWarriors(db, discord, msg);
       } catch (error) {
         console.log(error);
       }
@@ -165,7 +171,7 @@ const commands = {
   battle: function(db, discord, msg) {
     if (msg.channel.type == 'dm') {
       try {
-        dm.battle(db, discord, msg);
+        battle(db, discord, msg);
       } catch (error) {
         console.log(error);
       }
@@ -196,7 +202,7 @@ const commands = {
   leaveGame: function(db, discord, msg) {
     if (msg.channel.type == 'dm') {
       try {
-        dm.leaveGame(db, discord, msg);
+        leaveGame(db, discord, msg);
       } catch (error) {
         console.log(error);
       }
@@ -207,7 +213,7 @@ const commands = {
   predict: function(db, discord, msg) {
     if (msg.channel.type == 'dm') {
       try {
-        dm.predict(db, discord, msg);
+        predict(db, discord, msg);
       } catch (error) {
         console.log(error);
       }
@@ -217,7 +223,7 @@ const commands = {
   buyRecruit: function(db, discord, msg) {
     if (msg.channel.type == 'dm') {
       try {
-        dm.buyRecruit(db, discord, msg);
+        buyRecruit(db, discord, msg);
       } catch (error) {
         console.log(error);
       }
@@ -227,7 +233,7 @@ const commands = {
   battleResults: function(db, discord, msg) {
     if (msg.channel.type == 'dm') {
       try {
-        dm.battleResults(db, discord, msg);
+        battleResults(db, discord, msg);
       } catch (error) {
         console.log(error);
       }

@@ -2,7 +2,7 @@ import Battle from './Battle.js';
 import _s from './settings.js';
 
 const functions = {
-  autoFight: function(db, discord) {
+  autoFight: async function(db, discord) {
     const guildsCollection = db.collection('guilds');
     const warriorsCollection = db.collection('warriors');
     const usersCollection = db.collection('users');
