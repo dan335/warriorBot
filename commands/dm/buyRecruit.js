@@ -1,3 +1,6 @@
+import _s from '../../settings.js';
+
+
 export default async function buyRecruit(db, discord, msg) {
   const usersCollection = db.collection('users');
 
