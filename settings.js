@@ -10,7 +10,6 @@ const _s = {
   maxAge: 120,
   minAgeToDie: 40,
   startAge: 18,
-  numHourlyFights: 25,
   maxRecruitsAvailable: 10
 }
 

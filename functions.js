@@ -12,7 +12,9 @@ const functions = {
     const guilds = await guildsCursor.toArray();
 
     for (let g = 0; g < guilds.length; g++) {
-      for (let n = 0; n < _s.numHourlyFights; n++) {
+      const numWarriors = await warriorsCollection.countDocuments({ guildDiscordId: guilds[g].discordId });
+
+      for (let n = 0; n < numWarriors * 4; n++) {
 
         const warriorCursor = await warriorsCollection.aggregate([
           { $match: { guildDiscordId: guilds[g].discordId }},
