@@ -71,7 +71,7 @@ export default class Battle {
     // gems and points
     if (this.warrior1.isWinner) {
       const expected = EloRating.expected(this.warrior1.points, this.warrior2.points);
-      const gems = (Math.random() * 100 + 50) * (1 - expected);
+      const gems = (Math.random() * 10 + 50) * (1 - expected);
       this.description += this.warrior1.name+' won **'+Math.round(gems)+'** gems.\n';
       this.shortDescription += ' and won '+Math.round(gems)+' gems.';
       usersCollection.updateOne({_id:this.user1._id}, {$inc:{gems:gems}});

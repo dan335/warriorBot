@@ -37,9 +37,9 @@ mongo.connect(error => {
   db.createIndex('battles', {warrior2DiscordId:1});
 
   if (process.env.NODE_ENV == 'development') {
-    console.log('Started Warriors in development mode.');
+    console.log('Started WarriorBot in development mode.');
   } else {
-    console.log('Started Warriors in production mode.');
+    console.log('Started WarriorBot in production mode.');
   }
 
   discord.on('ready', () => {
