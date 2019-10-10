@@ -9,7 +9,7 @@ const events = {
   nightly: function(db, discord) {
     // give everyone 1 recruit
     const usersCollection = db.collection('users');
-    usersCollection.updateMany({maxRecruitsAvailable: {$lt: _s.maxRecruitsAvailable}}, {$inc:{recruitsAvailable:1}});
+    usersCollection.updateMany({recruitsAvailable: {$lt: _s.maxRecruitsAvailable}}, {$inc:{recruitsAvailable:1}});
 
     const warriorsCollection = db.collection('warriors');
 
