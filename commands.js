@@ -158,7 +158,7 @@ const commands = {
   players: function(db, discord, msg) {
     try {
       if (msg.channel.type == 'dm') {
-        dm.players(db, discord, msg);
+        //dm.players(db, discord, msg);
       } else {
         playersText(db, discord, msg);
       }
