@@ -127,7 +127,8 @@ const attacks = {
 
         let diff = _s.attackDuration - (new Date().getTime() - new Date(attack.createdAt).getTime());
         diff = Math.max(0, diff);
-        const minutes = dateFns.format(dateFns.addMilliseconds(new Date(0), diff), 'm');
+        //const minutes = dateFns.format(dateFns.addMilliseconds(new Date(0), diff), 'm');
+        const minutes = Math.round(diff / 1000 / 60);
 
         msg.author.send('**'+warrior.name+"** has joined your guild's defense against an attack from **"+functions.escapeMarkdown(attack.attackingGuild.name)+"**.  You rolled a **"+Math.round(roll*100)+"** and your guild now has an defense power of **"+Math.round(defenseMax*100)+"**.  They have **"+Math.round(attackMax*100)+"**.  You have **"+minutes+"** minutes left to defend.");
 
@@ -280,7 +281,8 @@ const attacks = {
 
           let diff = _s.attackDuration - (new Date().getTime() - new Date(attack.createdAt).getTime());
           diff = Math.max(0, diff);
-          const minutes = dateFns.format(dateFns.addMilliseconds(new Date(0), diff), 'm');
+          //const minutes = dateFns.format(dateFns.addMilliseconds(new Date(0), diff), 'm');
+          const minutes = Math.round(diff / 1000 / 60);
 
           msg.author.send('**'+warrior.name+'** has joined an attack on **'+defendingGuild.name+'**.  You rolled a **'+Math.round(roll*100)+'** and your guild now has an attack power of **'+Math.round(attackMax*100)+'**.  They have **'+defendMax+'**.  You have **'+minutes+'** minutes left to attack.');
 
@@ -396,7 +398,8 @@ const attacks = {
 
             let diff = _s.attackDuration - (new Date().getTime() - new Date(attacks[n].createdAt).getTime());
             diff = Math.max(0, diff);
-            const minutes = dateFns.format(dateFns.addMilliseconds(new Date(0), diff), 'm');
+            //const minutes = dateFns.format(dateFns.addMilliseconds(new Date(0), diff), 'm');
+            const minutes = Math.round(diff / 1000 / 60);
 
             m += '  You have **'+minutes+'** minutes left to join.\n';
           }
@@ -418,7 +421,8 @@ const attacks = {
 
             let diff = _s.attackDuration -  (new Date().getTime() - new Date(defends[n].createdAt).getTime());
             diff = Math.max(0, diff);
-            const minutes = dateFns.format(dateFns.addMilliseconds(new Date(0), diff), 'm');
+            //const minutes = dateFns.format(dateFns.addMilliseconds(new Date(0), diff), 'm');
+            const minutes = Math.round(diff / 1000 / 60);
 
             m += '  You have **'+minutes+'** minutes left to defend.\n';
           }
